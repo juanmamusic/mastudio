@@ -9,12 +9,12 @@
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <!-- Bootstrap 5 -->
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
 <!-- Bootstrap Icons (solo para íconos de contacto/servicios) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
 <style>
 /* =====================================================
@@ -58,6 +58,7 @@
 }
 
 *{ box-sizing:border-box; }
+.bi{ width:1em; height:1em; display:inline-block; vertical-align:-0.125em; fill:currentColor; flex-shrink:0; overflow:visible; }
 
 html{ scroll-behavior:smooth; }
 
@@ -379,7 +380,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-family:var(--font-mono); font-size:0.7rem; color:var(--text-soft);
   display:flex; align-items:center; gap:0.4rem; border:1px solid var(--border);
 }
-.avatar-badge i{ color:var(--indigo-bright); }
+.avatar-badge .bi{ color:var(--indigo-bright); }
 
 .idea-readout{ margin-top:2.75rem; text-align:center; }
 .idea-readout-label{
@@ -751,9 +752,91 @@ body{ overflow-x:hidden; }
 @media (hover: none) and (pointer: coarse){
   .case-card{ cursor:default; }
 }
+
+/* =====================================================
+   NAVBAR — barra de progreso + indicador de sección
+   ===================================================== */
+.nav-progress{ position:absolute; left:0; right:0; bottom:-1px; height:2px; pointer-events:none; overflow:hidden; }
+.nav-progress span{
+  display:block; width:100%; height:100%; transform-origin:0 50%; transform:scaleX(0);
+  background:linear-gradient(90deg, var(--indigo) 0%, var(--indigo-bright) 100%);
+  box-shadow:0 0 12px var(--indigo-glow); will-change:transform;
+}
+.nav-links a.is-active{ color:var(--text); }
+.nav-indicator{ display:none; }
+@media (min-width:992px){
+  .nav-links{ position:relative; }
+  .nav-links > a, .nav-links > .lang-switch{ position:relative; z-index:1; }
+  .nav-indicator{
+    display:block; position:absolute; left:0; top:50%; height:32px; width:0;
+    border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08);
+    opacity:0; pointer-events:none; z-index:0; transform:translate(0,-50%);
+    transition:transform 0.38s cubic-bezier(.2,.75,.2,1), width 0.38s cubic-bezier(.2,.75,.2,1), opacity 0.25s ease;
+  }
+}
+@media (max-width:991.98px){
+  .nav-links a.is-active{ color:var(--indigo-bright); }
+}
+
+/* =====================================================
+   FOOTER — frase grande (large type) + hora local
+   ===================================================== */
+@property --spot{ syntax:'<length>'; inherits:true; initial-value:0px; }
+.footer-statement{
+  display:block; margin:0.5rem 0 2.25rem; padding-top:2.25rem; border-top:1px solid var(--border);
+  text-decoration:none; color:inherit; --spot:0px;
+  transition:--spot 0.6s cubic-bezier(.2,.7,.2,1);
+}
+.footer-statement.is-lit{ --spot:260px; }
+.footer-statement-text{
+  display:block; width:max-content; max-width:100%;
+  font-family:var(--font-display); font-weight:700; line-height:0.95; letter-spacing:-0.055em;
+  font-size:clamp(2.4rem, 11vw, 4rem); white-space:nowrap; padding-bottom:0.08em;
+  background:
+    radial-gradient(circle var(--spot) at var(--mx, 50%) var(--my, 50%), #fff 0%, var(--indigo-bright) 45%, transparent 100%),
+    linear-gradient(180deg, rgba(247,248,248,0.3) 0%, rgba(247,248,248,0.1) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+@media (max-width:575.98px){
+  .footer-statement-text{ white-space:normal; width:auto; font-size:clamp(2.4rem, 12.5vw, 3.6rem); }
+}
+.footer-statement-cta{
+  display:inline-flex; align-items:center; gap:0.45rem; margin-top:1.1rem;
+  font-family:var(--font-mono); font-size:0.78rem; letter-spacing:0.04em; text-transform:uppercase;
+  color:var(--text-faint); transition:color 0.25s ease, gap 0.25s ease;
+}
+.footer-statement:hover .footer-statement-cta, .footer-statement:focus-visible .footer-statement-cta{ color:var(--indigo-bright); gap:0.7rem; }
+.footer-statement:focus-visible{ outline:2px solid var(--indigo-bright); outline-offset:6px; border-radius:6px; }
+.footer-meta{ display:inline-flex; align-items:center; flex-wrap:wrap; gap:0.5rem; }
+.footer-time{ font-family:var(--font-mono); font-size:0.74rem; color:var(--text-soft); font-variant-numeric:tabular-nums; }
+.live-dot{
+  width:7px; height:7px; border-radius:50%; background:var(--teal); flex-shrink:0;
+  box-shadow:0 0 0 0 rgba(85,214,190,0.5); animation:livePulse 2.4s ease-out infinite;
+}
+@keyframes livePulse{
+  0%{ box-shadow:0 0 0 0 rgba(85,214,190,0.45); }
+  70%{ box-shadow:0 0 0 7px rgba(85,214,190,0); }
+  100%{ box-shadow:0 0 0 0 rgba(85,214,190,0); }
+}
+
+/* =====================================================
+   RENDIMIENTO — canvases 3D aparecen suave al estar listos
+   ===================================================== */
+canvas.gl-fade{ opacity:0; transition:opacity 0.9s ease; }
+canvas.gl-fade.is-ready{ opacity:1; }
+
+@media (prefers-reduced-motion: reduce){
+  .live-dot{ animation:none; }
+  .nav-indicator, .nav-progress span{ transition:none; }
+}
 </style>
 </head>
 <body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="i-arrow-up-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M14 2.5a.5.5 0 0 0-.5-.5h-6a.5.5 0 0 0 0 1h4.793L2.146 13.146a.5.5 0 0 0 .708.708L13 3.707V8.5a.5.5 0 0 0 1 0z"/></symbol><symbol id="i-behance" viewBox="0 0 16 16"><path d="M4.654 3c.461 0 .887.035 1.278.14.39.07.711.216.996.391s.497.426.641.747c.14.32.216.711.216 1.137 0 .496-.106.922-.356 1.242-.215.32-.566.606-.997.817.606.176 1.067.496 1.348.922s.461.957.461 1.563c0 .496-.105.922-.285 1.278a2.3 2.3 0 0 1-.782.887c-.32.215-.711.39-1.137.496a5.3 5.3 0 0 1-1.278.176L0 12.803V3zm-.285 3.978c.39 0 .71-.105.957-.285.246-.18.355-.497.355-.887 0-.216-.035-.426-.105-.567a1 1 0 0 0-.32-.355 1.8 1.8 0 0 0-.461-.176c-.176-.035-.356-.035-.567-.035H2.17v2.31c0-.005 2.2-.005 2.2-.005zm.105 4.193c.215 0 .426-.035.606-.07.176-.035.356-.106.496-.216s.25-.215.356-.39c.07-.176.14-.391.14-.641 0-.496-.14-.852-.426-1.102-.285-.215-.676-.32-1.137-.32H2.17v2.734h2.305zm6.858-.035q.428.427 1.278.426c.39 0 .746-.106 1.032-.286q.426-.32.53-.64h1.74c-.286.851-.712 1.457-1.278 1.848-.566.355-1.243.566-2.06.566a4.1 4.1 0 0 1-1.527-.285 2.8 2.8 0 0 1-1.137-.782 2.85 2.85 0 0 1-.712-1.172c-.175-.461-.25-.957-.25-1.528 0-.531.07-1.032.25-1.493.18-.46.426-.852.747-1.207.32-.32.711-.606 1.137-.782a4 4 0 0 1 1.493-.285c.606 0 1.137.105 1.598.355.46.25.817.532 1.102.958.285.39.496.851.641 1.348.07.496.105.996.07 1.563h-5.15c0 .58.21 1.11.496 1.396m2.24-3.732c-.25-.25-.642-.391-1.103-.391-.32 0-.566.07-.781.176s-.356.25-.496.39a.96.96 0 0 0-.25.497c-.036.175-.07.32-.07.46h3.196c-.07-.526-.25-.882-.497-1.132zm-3.127-3.728h3.978v.957h-3.978z"/></symbol><symbol id="i-box-arrow-up-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/></symbol><symbol id="i-calendar-check" viewBox="0 0 16 16"><path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></symbol><symbol id="i-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/></symbol><symbol id="i-cloud-download" viewBox="0 0 16 16"><path d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/>
+  <path d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708z"/></symbol><symbol id="i-cpu" viewBox="0 0 16 16"><path d="M5 0a.5.5 0 0 1 .5.5V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2A2.5 2.5 0 0 1 14 4.5h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14a2.5 2.5 0 0 1-2.5 2.5v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14A2.5 2.5 0 0 1 2 11.5H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2A2.5 2.5 0 0 1 4.5 2V.5A.5.5 0 0 1 5 0m-.5 3A1.5 1.5 0 0 0 3 4.5v7A1.5 1.5 0 0 0 4.5 13h7a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 11.5 3zM5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5zM6.5 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/></symbol><symbol id="i-diagram-3" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5zM0 11.5A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/></symbol><symbol id="i-envelope" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/></symbol><symbol id="i-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/></symbol><symbol id="i-graph-up-arrow" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5"/></symbol><symbol id="i-linkedin" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/></symbol><symbol id="i-list" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/></symbol><symbol id="i-play-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/></symbol><symbol id="i-vimeo" viewBox="0 0 16 16"><path d="M15.992 4.204q-.106 2.334-3.262 6.393-3.263 4.243-5.522 4.243-1.4 0-2.367-2.583L3.55 7.523Q2.83 4.939 2.007 4.94q-.178.001-1.254.754L0 4.724a210 210 0 0 0 2.334-2.081q1.581-1.364 2.373-1.437 1.865-.185 2.298 2.553.466 2.952.646 3.666.54 2.447 1.186 2.445.5 0 1.508-1.587 1.006-1.587 1.077-2.415.144-1.37-1.077-1.37a3 3 0 0 0-1.185.261q1.183-3.86 4.508-3.756 2.466.075 2.324 3.2z"/></symbol><symbol id="i-whatsapp" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></symbol><symbol id="i-x-lg" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></symbol></svg>
 
 <a href="#contenido" class="skip-link" data-i18n="a11y.skip">Skip to main content</a>
 
@@ -773,6 +856,7 @@ body{ overflow-x:hidden; }
     </a>
 
     <nav class="nav-links" id="navLinks" aria-label="Navigation principal">
+      <span class="nav-indicator" id="navIndicator" aria-hidden="true"></span>
       <a href="#sobre-mi" data-i18n="nav.about">About</a>
       <a href="#servicios" data-i18n="nav.services">Services</a>
       <a href="#portafolio" data-i18n="nav.portfolio">Portfolio</a>
@@ -786,9 +870,10 @@ body{ overflow-x:hidden; }
     </nav>
 
     <button class="mobile-toggle" id="mobileToggle" aria-expanded="false" aria-controls="navLinks" data-i18n-aria="a11y.openMenu" aria-label="Open navigation menu">
-      <i class="bi bi-list" aria-hidden="true"></i>
+      <svg class="bi" aria-hidden="true"><use href="#i-list"/></svg>
     </button>
   </div>
+  <div class="nav-progress" aria-hidden="true"><span id="navProgressBar"></span></div>
 </header>
 
 <main id="contenido">
@@ -805,7 +890,7 @@ body{ overflow-x:hidden; }
         <h1 data-i18n="hero.title">Your product doesn't have a design problem. It has a <em>system</em> quietly costing you money.</h1>
         <p class="lead-text" data-i18n="hero.lead">I find the exact point where your product's complexity is costing you adoption, sales, or team speed.</p>
         <div class="hero-ctas">
-          <a href="https://calendar.app.google/GWivwZbos5j8QxMU7" target="_blank" rel="noopener" class="btn-cta"><i class="bi bi-calendar-check" aria-hidden="true"></i> <span data-i18n="hero.ctaPrimary">Book a call</span></a>
+          <a href="https://calendar.app.google/GWivwZbos5j8QxMU7" target="_blank" rel="noopener" class="btn-cta"><svg class="bi" aria-hidden="true"><use href="#i-calendar-check"/></svg> <span data-i18n="hero.ctaPrimary">Book a call</span></a>
           <a href="#portafolio" class="btn-ghost-dark" data-i18n="hero.ctaSecondary">See case studies</a>
         </div>
         <div class="hero-stats">
@@ -880,7 +965,7 @@ body{ overflow-x:hidden; }
           <div class="avatar-frame" id="aboutAvatarStage" aria-hidden="true">
             <span class="avatar-fallback" aria-hidden="true">JM</span>
           </div>
-          <div class="avatar-badge"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> <span data-i18n="about.location">Guatemala · Remote</span></div>
+          <div class="avatar-badge"><svg class="bi" aria-hidden="true"><use href="#i-geo-alt-fill"/></svg> <span data-i18n="about.location">Guatemala · Remote</span></div>
           <div class="idea-readout">
             <span class="idea-readout-label" data-i18n="machine.label">Generating ideas</span>
             <p class="idea-readout-text" id="ideaReadoutText" aria-live="polite"></p>
@@ -926,28 +1011,28 @@ body{ overflow-x:hidden; }
     <div class="row g-4">
       <div class="col-md-6 col-lg-3 reveal reveal-delay-1">
         <div class="service-card">
-          <div class="service-icon"><i class="bi bi-diagram-3" aria-hidden="true"></i></div>
+          <div class="service-icon"><svg class="bi" aria-hidden="true"><use href="#i-diagram-3"/></svg></div>
           <h3 data-i18n="services.s1title">UX/UI &amp; Design Systems</h3>
           <p data-i18n="services.s1desc">Your product grew by patching things together, and now every new feature takes longer and breaks something else. I audit the whole system, find where the coherence broke down, and leave a foundation your team can scale without renegotiating every decision from scratch.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3 reveal reveal-delay-2">
         <div class="service-card">
-          <div class="service-icon"><i class="bi bi-cpu" aria-hidden="true"></i></div>
+          <div class="service-icon"><svg class="bi" aria-hidden="true"><use href="#i-cpu"/></svg></div>
           <h3 data-i18n="services.s2title">AI-Assisted Prototyping</h3>
           <p data-i18n="services.s2desc">Before it reaches engineering, I validate every decision with a working prototype, not a static mockup. That means iterating in days, not sprints, and arriving at development with less rework and fewer last-minute debates.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3 reveal reveal-delay-3">
         <div class="service-card">
-          <div class="service-icon"><i class="bi bi-play-circle" aria-hidden="true"></i></div>
+          <div class="service-icon"><svg class="bi" aria-hidden="true"><use href="#i-play-circle"/></svg></div>
           <h3 data-i18n="services.s3title">Motion &amp; Micro-interactions</h3>
           <p data-i18n="services.s3desc">When a flow feels slow or confusing, it's often not the logic — it's that the interface isn't telling the user what's happening. I design the feedback and transitions that make your product feel as well-built as it actually is.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3 reveal reveal-delay-4">
         <div class="service-card">
-          <div class="service-icon"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></div>
+          <div class="service-icon"><svg class="bi" aria-hidden="true"><use href="#i-graph-up-arrow"/></svg></div>
           <h3 data-i18n="services.s4title">Product strategy</h3>
           <p data-i18n="services.s4desc">When the roadmap fills up with features nobody can quite justify, I step in to bring order: what to build first, why, and how you'll measure whether it worked — working shoulder to shoulder with product and engineering, not from the outside.</p>
         </div>
@@ -988,12 +1073,12 @@ body{ overflow-x:hidden; }
         <div class="case-card">
           <div class="case-media">
             <button type="button" class="case-cover" data-gallery="aims360" data-index="0" aria-label="Ver imágenes del proyecto AIMS360">
-              <img src="assets/aims-login-thumb.jpg" alt="AIMS360 — pantalla de acceso Runway Login" loading="lazy">
+              <img src="assets/aims-login-cover.webp" alt="AIMS360 — pantalla de acceso Runway Login" width="720" height="450" loading="lazy" decoding="async">
             </button>
             <div class="case-thumbs">
-              <button type="button" class="case-thumb" data-gallery="aims360" data-index="1" aria-label="Ver imagen 2 de AIMS360"><img src="assets/aims-ots-thumb.jpg" alt="" loading="lazy"></button>
-              <button type="button" class="case-thumb" data-gallery="aims360" data-index="2" aria-label="Ver imagen 3 de AIMS360"><img src="assets/aims-roles-thumb.jpg" alt="" loading="lazy"></button>
-              <button type="button" class="case-thumb" data-gallery="aims360" data-index="3" aria-label="Ver imagen 4 de AIMS360"><img src="assets/aims-styles-thumb.jpg" alt="" loading="lazy"></button>
+              <button type="button" class="case-thumb" data-gallery="aims360" data-index="1" aria-label="Ver imagen 2 de AIMS360"><img src="assets/aims-ots-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+              <button type="button" class="case-thumb" data-gallery="aims360" data-index="2" aria-label="Ver imagen 3 de AIMS360"><img src="assets/aims-roles-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+              <button type="button" class="case-thumb" data-gallery="aims360" data-index="3" aria-label="Ver imagen 4 de AIMS360"><img src="assets/aims-styles-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
             </div>
           </div>
           <div class="case-body">
@@ -1004,7 +1089,7 @@ body{ overflow-x:hidden; }
             <p class="case-body-text" data-i18n="portfolio.c1desc">AIMS360 was losing adoption because its desktop interface couldn't grow with the business. I redesigned the system end to end and laid the groundwork for a web ERP now used by 2,500 stores, without losing users who'd spent years running the previous version.</p>
             <div class="case-meta"><span>Figma</span><span>Claude Code</span><span>Design System</span></div>
             <div class="case-ds-row">
-              <button type="button" class="case-ds-btn" id="openDesignSystem"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> <span data-i18n="portfolio.c1dsBtn">View the design system</span></button>
+              <button type="button" class="case-ds-btn" id="openDesignSystem"><svg class="bi" aria-hidden="true"><use href="#i-box-arrow-up-right"/></svg> <span data-i18n="portfolio.c1dsBtn">View the design system</span></button>
               <p style="margin:0.5rem 0 0; font-size:0.78rem; color:var(--text-faint);" data-i18n="portfolio.c1dsNote">Built token-by-token with the engineering team, so design and code never drift apart.</p>
             </div>
           </div>
@@ -1014,11 +1099,11 @@ body{ overflow-x:hidden; }
         <div class="case-card">
           <div class="case-media">
             <button type="button" class="case-cover" data-gallery="mosaik" data-index="0" aria-label="Ver imágenes del proyecto Mosaik">
-              <img src="assets/mosaik-1-thumb.jpg" alt="Mosaik — dashboard de agente con propiedades y transacciones" loading="lazy">
+              <img src="assets/mosaik-1-cover.webp" alt="Mosaik — dashboard de agente con propiedades y transacciones" width="720" height="450" loading="lazy" decoding="async">
             </button>
             <div class="case-thumbs">
-              <button type="button" class="case-thumb" data-gallery="mosaik" data-index="1" aria-label="Ver imagen 2 de Mosaik"><img src="assets/mosaik-2-thumb.jpg" alt="" loading="lazy"></button>
-              <button type="button" class="case-thumb" data-gallery="mosaik" data-index="2" aria-label="Ver imagen 3 de Mosaik"><img src="assets/mosaik-3-thumb.jpg" alt="" loading="lazy"></button>
+              <button type="button" class="case-thumb" data-gallery="mosaik" data-index="1" aria-label="Ver imagen 2 de Mosaik"><img src="assets/mosaik-2-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+              <button type="button" class="case-thumb" data-gallery="mosaik" data-index="2" aria-label="Ver imagen 3 de Mosaik"><img src="assets/mosaik-3-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
             </div>
           </div>
           <div class="case-body">
@@ -1035,11 +1120,11 @@ body{ overflow-x:hidden; }
         <div class="case-card">
           <div class="case-media">
             <button type="button" class="case-cover" data-gallery="bancoindustrial" data-index="0" aria-label="Ver imágenes del proyecto Banco Industrial">
-              <img src="assets/bi-1-thumb.jpg" alt="Banco Industrial — sitio para personas" loading="lazy">
+              <img src="assets/bi-1-cover.webp" alt="Banco Industrial — sitio para personas" width="720" height="450" loading="lazy" decoding="async">
             </button>
             <div class="case-thumbs">
-              <button type="button" class="case-thumb" data-gallery="bancoindustrial" data-index="1" aria-label="Ver imagen 2 de Banco Industrial"><img src="assets/bi-2-thumb.jpg" alt="" loading="lazy"></button>
-              <button type="button" class="case-thumb" data-gallery="bancoindustrial" data-index="2" aria-label="Ver imagen 3 de Banco Industrial"><img src="assets/bi-3-thumb.jpg" alt="" loading="lazy"></button>
+              <button type="button" class="case-thumb" data-gallery="bancoindustrial" data-index="1" aria-label="Ver imagen 2 de Banco Industrial"><img src="assets/bi-2-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+              <button type="button" class="case-thumb" data-gallery="bancoindustrial" data-index="2" aria-label="Ver imagen 3 de Banco Industrial"><img src="assets/bi-3-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
             </div>
           </div>
           <div class="case-body">
@@ -1072,14 +1157,14 @@ body{ overflow-x:hidden; }
         <div class="case-card">
           <div class="exp-video-wrap">
             <span class="exp-badge" data-i18n="experiences.avatrBadge">Interactive 3D</span>
-            <video src="assets/experiences/avatr-3d-loop.mp4" poster="assets/experiences/avatr-3d-poster.jpg" autoplay muted loop playsinline aria-label="AVATR 3D configurator demo"></video>
+            <video data-src="assets/experiences/avatr-studio-loop.mp4" data-poster="assets/experiences/avatr-studio-poster.webp" muted loop playsinline preload="none" aria-label="AVATR 3D configurator demo"></video>
           </div>
           <div class="case-body">
             <div class="case-top"><span class="case-id">EXP&nbsp;·&nbsp;01</span><span class="case-dot dot-indigo" aria-hidden="true"></span></div>
             <span class="case-project">AVATR</span>
             <span class="case-tag" data-i18n="experiences.avatrTag">Automotive · 3D configurator</span>
             <h3 style="font-size:1.05rem;" data-i18n="experiences.avatrTitle">A car you can walk around before it exists in the showroom</h3>
-            <p class="case-body-text" data-i18n="experiences.avatrDesc">A dealership can't put every color and scene in front of a buyer. I built a real-time 3D configurator — drag to rotate, switch environments and time of day — so the decision to visit happens before the visit.</p>
+            <p class="case-body-text" data-i18n="experiences.avatrDesc">A dealership can't put every color and scene in front of a buyer. I built a real-time 3D configurator — open the doors, zoom into the details, change the setting or put it in motion — so the decision to visit happens before the visit.</p>
             <div class="case-meta"><span>Three.js</span><span>WebGL</span><span>3D</span></div>
           </div>
         </div>
@@ -1089,15 +1174,15 @@ body{ overflow-x:hidden; }
         <div class="case-card">
           <div class="exp-trio">
             <div class="exp-trio-item">
-              <video src="assets/experiences/walmart-ruleta.mp4" poster="assets/experiences/walmart-ruleta-poster.jpg" autoplay muted loop playsinline aria-label="Walmart roulette activation demo"></video>
+              <video data-src="assets/experiences/walmart-ruleta.mp4" data-poster="assets/experiences/walmart-ruleta-poster.webp" muted loop playsinline preload="none" aria-label="Walmart roulette activation demo"></video>
               <span class="exp-trio-label" data-i18n="experiences.btlRuleta">Walmart — prize wheel</span>
             </div>
             <div class="exp-trio-item">
-              <video src="assets/experiences/walmart-sobres.mp4" poster="assets/experiences/walmart-sobres-poster.jpg" autoplay muted loop playsinline aria-label="Walmart surprise envelopes activation demo"></video>
+              <video data-src="assets/experiences/walmart-sobres.mp4" data-poster="assets/experiences/walmart-sobres-poster.webp" muted loop playsinline preload="none" aria-label="Walmart surprise envelopes activation demo"></video>
               <span class="exp-trio-label" data-i18n="experiences.btlSobres">Walmart — surprise envelopes</span>
             </div>
             <div class="exp-trio-item">
-              <video src="assets/experiences/paiz-tragamonedas.mp4" poster="assets/experiences/paiz-tragamonedas-poster.jpg" autoplay muted loop playsinline aria-label="Paiz slot machine activation demo"></video>
+              <video data-src="assets/experiences/paiz-tragamonedas.mp4" data-poster="assets/experiences/paiz-tragamonedas-poster.webp" muted loop playsinline preload="none" aria-label="Paiz slot machine activation demo"></video>
               <span class="exp-trio-label" data-i18n="experiences.btlTraga">Paiz — slot machine</span>
             </div>
           </div>
@@ -1121,7 +1206,7 @@ body{ overflow-x:hidden; }
       <span id="dsModalTitle" data-i18n="ds.modalTitle">AIMS360 — Design System</span>
       <button type="button" class="ds-close" id="dsClose" aria-label="Close" data-i18n-aria="ds.close">&times;</button>
     </div>
-    <iframe id="dsFrame" src="" title="AIMS360 Design System" loading="lazy"></iframe>
+    <iframe id="dsFrame" title="AIMS360 Design System" loading="lazy"></iframe>
   </div>
 </div>
 
@@ -1178,9 +1263,9 @@ body{ overflow-x:hidden; }
         <h2 data-i18n="cta.title">Where is complexity costing your product money?</h2>
         <p data-i18n="cta.subtitle">Tell me what stage your project is at. I usually reply over WhatsApp or email within 24 business hours.</p>
         <div class="hero-ctas">
-          <a href="https://calendar.app.google/GWivwZbos5j8QxMU7" target="_blank" rel="noopener" class="btn-cta"><i class="bi bi-calendar-check" aria-hidden="true"></i> <span data-i18n="cta.bookCall">Book a call</span></a>
-          <a href="https://wa.me/50242181019" target="_blank" rel="noopener" class="btn-ghost-dark"><i class="bi bi-whatsapp" aria-hidden="true"></i> <span data-i18n="cta.whatsapp">Message on WhatsApp</span></a>
-          <a href="mailto:juanmanuelmonroy@gmail.com" class="btn-ghost-dark"><i class="bi bi-envelope" aria-hidden="true"></i> juanmanuelmonroy@gmail.com</a>
+          <a href="https://calendar.app.google/GWivwZbos5j8QxMU7" target="_blank" rel="noopener" class="btn-cta"><svg class="bi" aria-hidden="true"><use href="#i-calendar-check"/></svg> <span data-i18n="cta.bookCall">Book a call</span></a>
+          <a href="https://wa.me/50242181019" target="_blank" rel="noopener" class="btn-ghost-dark"><svg class="bi" aria-hidden="true"><use href="#i-whatsapp"/></svg> <span data-i18n="cta.whatsapp">Message on WhatsApp</span></a>
+          <a href="mailto:juanmanuelmonroy@gmail.com" class="btn-ghost-dark"><svg class="bi" aria-hidden="true"><use href="#i-envelope"/></svg> juanmanuelmonroy@gmail.com</a>
         </div>
       </div>
     </div>
@@ -1218,16 +1303,20 @@ body{ overflow-x:hidden; }
       <div class="footer-col">
         <h4 data-i18n="footer.socialHeading">Social</h4>
         <div class="social-row">
-          <a href="https://www.linkedin.com/in/jmadigital" target="_blank" rel="noopener" aria-label="LinkedIn de Juan Monroy"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
-          <a href="https://www.behance.net/jmastyle" target="_blank" rel="noopener" aria-label="Behance de Juan Monroy"><i class="bi bi-behance" aria-hidden="true"></i></a>
-          <a href="https://vimeo.com/jmadigital" target="_blank" rel="noopener" aria-label="Vimeo de Juan Monroy"><i class="bi bi-vimeo" aria-hidden="true"></i></a>
-          <a href="https://drive.google.com/drive/folders/11Cj8azI2sAt7O0uJHis2HK288k6Fl6eD?usp=sharing" target="_blank" rel="noopener" data-i18n-aria="footer.driveLabel" aria-label="Download project resources"><i class="bi bi-cloud-download" aria-hidden="true"></i></a>
+          <a href="https://www.linkedin.com/in/jmadigital" target="_blank" rel="noopener" aria-label="LinkedIn de Juan Monroy"><svg class="bi" aria-hidden="true"><use href="#i-linkedin"/></svg></a>
+          <a href="https://www.behance.net/jmastyle" target="_blank" rel="noopener" aria-label="Behance de Juan Monroy"><svg class="bi" aria-hidden="true"><use href="#i-behance"/></svg></a>
+          <a href="https://vimeo.com/jmadigital" target="_blank" rel="noopener" aria-label="Vimeo de Juan Monroy"><svg class="bi" aria-hidden="true"><use href="#i-vimeo"/></svg></a>
+          <a href="https://drive.google.com/drive/folders/11Cj8azI2sAt7O0uJHis2HK288k6Fl6eD?usp=sharing" target="_blank" rel="noopener" data-i18n-aria="footer.driveLabel" aria-label="Download project resources"><svg class="bi" aria-hidden="true"><use href="#i-cloud-download"/></svg></a>
         </div>
       </div>
     </div>
+    <a class="footer-statement reveal" id="footerStatement" href="https://calendar.app.google/GWivwZbos5j8QxMU7" target="_blank" rel="noopener">
+      <span class="footer-statement-text" id="footerStatementText" data-i18n="footer.statement">Let's fix the system.</span>
+      <span class="footer-statement-cta"><span data-i18n="cta.bookCall">Book a call</span> <svg class="bi" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></span>
+    </a>
     <div class="footer-bottom">
       <span data-i18n="footer.copyright">© <span id="year"></span> Juan Manuel Monroy Gómez. All rights reserved.</span>
-      <span data-i18n="footer.location">Guatemala City, Guatemala · Available remote</span>
+      <span class="footer-meta"><span class="live-dot" aria-hidden="true"></span><span data-i18n="footer.location">Guatemala City, Guatemala · Available remote</span><span aria-hidden="true">·</span><time class="footer-time" id="localTime"></time></span>
     </div>
   </div>
 </footer>
@@ -1282,28 +1371,50 @@ body{ overflow-x:hidden; }
 <div class="lightbox-overlay" id="lightboxOverlay">
   <div class="lightbox-modal" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption">
     <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Cerrar galería">&times;</button>
-    <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Imagen anterior"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+    <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Imagen anterior"><svg class="bi" aria-hidden="true"><use href="#i-chevron-left"/></svg></button>
     <div class="lightbox-stage">
       <img id="lightboxImage" src="" alt="">
     </div>
-    <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Imagen siguiente"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+    <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Imagen siguiente"><svg class="bi" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
     <div class="lightbox-footer">
       <span id="lightboxCaption" class="lightbox-caption"></span>
       <span id="lightboxCounter" class="lightbox-counter"></span>
     </div>
   </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
   // ============ Año dinámico ============
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // ============ Navbar: sombra al hacer scroll ============
+  // ============ Utilidades de rendimiento ============
+  const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FINE_POINTER = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // Devuelve { on } que indica si el elemento está en pantalla: las animaciones
+  // dejan de dibujar cuando no se ven (menos CPU/GPU y batería).
+  function onScreen(el, margin){
+    const state = { on: true };
+    if (!('IntersectionObserver' in window) || !el) return state;
+    new IntersectionObserver(entries => { state.on = entries[0].isIntersecting; },
+      { rootMargin: margin || '100px 0px' }).observe(el);
+    return state;
+  }
+
+  // ============ Navbar: fondo al hacer scroll + barra de progreso ============
   const nav = document.getElementById('siteNav');
+  const progressBar = document.getElementById('navProgressBar');
+  let scrollTicking = false;
+  function onScrollFrame(){
+    scrollTicking = false;
+    const y = window.scrollY;
+    nav.classList.toggle('is-scrolled', y > 12);
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (progressBar) progressBar.style.transform = 'scaleX(' + (max > 0 ? Math.min(y / max, 1) : 0).toFixed(4) + ')';
+  }
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('is-scrolled', window.scrollY > 12);
-  });
+    if (!scrollTicking) { scrollTicking = true; requestAnimationFrame(onScrollFrame); }
+  }, { passive: true });
+  window.addEventListener('resize', onScrollFrame);
+  onScrollFrame();
 
   // ============ Menú móvil ============
   const toggle = document.getElementById('mobileToggle');
@@ -1311,12 +1422,12 @@ body{ overflow-x:hidden; }
   toggle.addEventListener('click', () => {
     const isOpen = links.classList.toggle('is-open');
     toggle.setAttribute('aria-expanded', isOpen);
-    toggle.innerHTML = isOpen ? '<i class="bi bi-x-lg" aria-hidden="true"></i>' : '<i class="bi bi-list" aria-hidden="true"></i>';
+    toggle.innerHTML = isOpen ? '<svg class="bi" aria-hidden="true"><use href="#i-x-lg"/></svg>' : '<svg class="bi" aria-hidden="true"><use href="#i-list"/></svg>';
   });
   links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
     links.classList.remove('is-open');
     toggle.setAttribute('aria-expanded', false);
-    toggle.innerHTML = '<i class="bi bi-list" aria-hidden="true"></i>';
+    toggle.innerHTML = '<svg class="bi" aria-hidden="true"><use href="#i-list"/></svg>';
   }));
 
   // ============ Microinteracción: revelar al hacer scroll ============
@@ -1402,7 +1513,7 @@ body{ overflow-x:hidden; }
       "experiences.avatrBadge": "3D interactivo",
       "experiences.avatrTag": "Automotriz · Configurador 3D",
       "experiences.avatrTitle": "Un auto que puedes recorrer antes de que exista en el showroom",
-      "experiences.avatrDesc": "Un concesionario no puede poner cada color y escenario frente a un comprador. Construí un configurador 3D en tiempo real — arrastra para girar, cambia de entorno y hora del día — para que la decisión de visitar la agencia ocurra antes de la visita.",
+      "experiences.avatrDesc": "Un concesionario no puede poner cada color y escenario frente a un comprador. Construí un configurador 3D en tiempo real — abre las puertas, acércate a los detalles, cambia el entorno o ponlo en movimiento — para que la decisión de visitar la agencia ocurra antes de la visita.",
       "experiences.btlTag": "Retail · Activaciones BTL",
       "experiences.btlTitle": "Juegos touch-screen que mueven inventario real en el piso de venta",
       "experiences.btlDesc": "Tres activaciones touch en punto de venta para Walmart y Paiz, cada una ligada a una promoción distinta. Los juegos no son decoración — cada giro y cada sobre está conectado a un inventario de premios real que controla el equipo de tienda.",
@@ -1435,6 +1546,7 @@ body{ overflow-x:hidden; }
       "footer.socialHeading": "Redes",
       "footer.copyright": '© <span id="year"></span> Juan Manuel Monroy Gómez. Todos los derechos reservados.',
       "footer.location": "Guatemala City, Guatemala · Disponible en remoto",
+      "footer.statement": "Arreglemos el sistema.",
       "console.customTag": "COMPONENTE GENERADO",
       "console.inputLabel": "Nombre del componente",
       "console.inputPlaceholder": "Ej. Tarjeta de precios, Navbar, Modal…",
@@ -1525,7 +1637,7 @@ body{ overflow-x:hidden; }
       "experiences.avatrBadge": "Interactive 3D",
       "experiences.avatrTag": "Automotive · 3D configurator",
       "experiences.avatrTitle": "A car you can walk around before it exists in the showroom",
-      "experiences.avatrDesc": "A dealership can't put every color and scene in front of a buyer. I built a real-time 3D configurator — drag to rotate, switch environments and time of day — so the decision to visit happens before the visit.",
+      "experiences.avatrDesc": "A dealership can't put every color and scene in front of a buyer. I built a real-time 3D configurator — open the doors, zoom into the details, change the setting or put it in motion — so the decision to visit happens before the visit.",
       "experiences.btlTag": "Retail · BTL activations",
       "experiences.btlTitle": "Touch-screen games that move real inventory on the sales floor",
       "experiences.btlDesc": "Three in-store touch activations for Walmart and Paiz, each tied to a different promotion. The games aren't decoration — every spin and every envelope is wired to a live prize inventory the store team controls.",
@@ -1558,6 +1670,7 @@ body{ overflow-x:hidden; }
       "footer.socialHeading": "Social",
       "footer.copyright": '© <span id="year"></span> Juan Manuel Monroy Gómez. All rights reserved.',
       "footer.location": "Guatemala City, Guatemala · Available remote",
+      "footer.statement": "Let's fix the system.",
       "console.customTag": "GENERATED COMPONENT",
       "console.inputLabel": "Component name",
       "console.inputPlaceholder": "E.g. Pricing card, Navbar, Modal…",
@@ -1612,6 +1725,7 @@ body{ overflow-x:hidden; }
     try{ localStorage.setItem('jm-site-lang', lang); }catch(e){}
     if (typeof window.__rebuildManifesto === 'function') window.__rebuildManifesto();
     if (typeof window.__rebuildIdeaMachine === 'function') window.__rebuildIdeaMachine();
+    if (typeof window.__afterLang === 'function') window.__afterLang();
   }
 
   Object.entries(langButtons).forEach(([code, btn]) => {
@@ -1832,7 +1946,8 @@ body{ overflow-x:hidden; }
       if (reducedMotion) {
         draw(0);
       } else {
-        (function loop(t){ draw(t); requestAnimationFrame(loop); })(0);
+        const gate = onScreen(container);
+        (function loop(t){ if (gate.on) draw(t); requestAnimationFrame(loop); })(0);
       }
     }
   })();
@@ -1941,7 +2056,7 @@ body{ overflow-x:hidden; }
   // =====================================================
   // E. ELEMENTO 3D DEL HERO — sistema de paneles flotantes
   // =====================================================
-  (function(){
+  function initHero3D(){
     const stage = document.getElementById('hero3dStage');
     if (!stage) return;
     if (window.innerWidth < 992) return;
@@ -1960,7 +2075,9 @@ body{ overflow-x:hidden; }
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.setSize(w, h);
+      renderer.domElement.classList.add('gl-fade');
       stage.appendChild(renderer.domElement);
+      requestAnimationFrame(() => requestAnimationFrame(() => renderer.domElement.classList.add('is-ready')));
 
       scene.add(new THREE.AmbientLight(0x8890ff, 0.6));
       const key = new THREE.DirectionalLight(0xffffff, 0.85);
@@ -2033,8 +2150,10 @@ body{ overflow-x:hidden; }
       camera.updateProjectionMatrix();
       renderer.setSize(stage.clientWidth, stage.clientHeight);
     }
+    const gate = onScreen(stage);
     function animate(){
       requestAnimationFrame(animate);
+      if (!gate.on) return;
       rotY += (mouseX * 0.35 - rotY) * 0.03;
       rotX += (mouseY * 0.18 - rotX) * 0.03;
       group.rotation.y = rotY + performance.now() * 0.00007;
@@ -2050,13 +2169,13 @@ body{ overflow-x:hidden; }
     } catch (e) {
       // Degradación silenciosa: si WebGL falla, el hero se ve bien sin el 3D
     }
-  })();
+  }
 
   // =====================================================
   // F. MÁQUINA DE IDEAS 3D — "Sobre mí" (misma familia visual
   // que el hero: geometría índigo facetada + núcleo cálido)
   // =====================================================
-  (function(){
+  function initAbout3D(){
     const stage = document.getElementById('aboutAvatarStage');
     if (!stage) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -2076,7 +2195,9 @@ body{ overflow-x:hidden; }
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.setSize(w, h);
+      renderer.domElement.classList.add('gl-fade');
       stage.appendChild(renderer.domElement);
+      requestAnimationFrame(() => requestAnimationFrame(() => renderer.domElement.classList.add('is-ready')));
 
       const fallback = stage.querySelector('.avatar-fallback');
       if (fallback) fallback.style.display = 'none';
@@ -2257,8 +2378,10 @@ body{ overflow-x:hidden; }
       camera.updateProjectionMatrix();
       renderer.setSize(stage.clientWidth, stage.clientHeight);
     }
+    const gate = onScreen(stage);
     function animate(){
       requestAnimationFrame(animate);
+      if (!gate.on) { lastTime = performance.now(); return; }
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
@@ -2302,7 +2425,7 @@ body{ overflow-x:hidden; }
     } catch (e) {
       // Degradación silenciosa: si WebGL falla, quedan las iniciales "JM"
     }
-  })();
+  }
 
   // =====================================================
   // H. TEXTO DE LA MÁQUINA — ideas generadas, cambian con el tiempo
@@ -2353,7 +2476,7 @@ body{ overflow-x:hidden; }
     const DS_SRC = 'aims360-design-system.html';
 
     function openDs(){
-      if (!dsFrame.src) dsFrame.src = DS_SRC;
+      if (!dsFrame.getAttribute('src')) dsFrame.setAttribute('src', DS_SRC);
       dsOverlay.classList.add('is-open');
       document.documentElement.style.overflow = 'hidden';
       dsClose.focus();
@@ -2378,20 +2501,20 @@ body{ overflow-x:hidden; }
 
     const GALLERIES = {
       aims360: [
-        { full: 'assets/aims-login-full.jpg', alt: 'AIMS360 — pantalla de acceso Runway Login' },
-        { full: 'assets/aims-ots-full.jpg', alt: 'AIMS360 — reporte Open to Sell con imágenes de producto' },
-        { full: 'assets/aims-roles-full.jpg', alt: 'AIMS360 — configuración de roles y permisos' },
-        { full: 'assets/aims-styles-full.jpg', alt: 'AIMS360 — listado de estilos, más de 25,000 registros' }
+        { full: 'assets/aims-login-full.webp', alt: 'AIMS360 — pantalla de acceso Runway Login' },
+        { full: 'assets/aims-ots-full.webp', alt: 'AIMS360 — reporte Open to Sell con imágenes de producto' },
+        { full: 'assets/aims-roles-full.webp', alt: 'AIMS360 — configuración de roles y permisos' },
+        { full: 'assets/aims-styles-full.webp', alt: 'AIMS360 — listado de estilos, más de 25,000 registros' }
       ],
       mosaik: [
-        { full: 'assets/mosaik-1-full.jpg', alt: 'Mosaik — dashboard de agente con propiedades y transacciones' },
-        { full: 'assets/mosaik-2-full.jpg', alt: 'Mosaik — directorio de concierge para proveedores de servicio' },
-        { full: 'assets/mosaik-3-full.jpg', alt: 'Mosaik — panel de transacciones y agenda del comprador' }
+        { full: 'assets/mosaik-1-full.webp', alt: 'Mosaik — dashboard de agente con propiedades y transacciones' },
+        { full: 'assets/mosaik-2-full.webp', alt: 'Mosaik — directorio de concierge para proveedores de servicio' },
+        { full: 'assets/mosaik-3-full.webp', alt: 'Mosaik — panel de transacciones y agenda del comprador' }
       ],
       bancoindustrial: [
-        { full: 'assets/bi-1-full.jpg', alt: 'Banco Industrial — sitio para personas' },
-        { full: 'assets/bi-2-full.jpg', alt: 'Banco Industrial — sitio para empresas' },
-        { full: 'assets/bi-3-full.jpg', alt: 'Banco Industrial — página de inicio' }
+        { full: 'assets/bi-1-full.webp', alt: 'Banco Industrial — sitio para personas' },
+        { full: 'assets/bi-2-full.webp', alt: 'Banco Industrial — sitio para empresas' },
+        { full: 'assets/bi-3-full.webp', alt: 'Banco Industrial — página de inicio' }
       ]
     };
 
@@ -2459,6 +2582,208 @@ body{ overflow-x:hidden; }
     nextBtn.addEventListener('click', next);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeLightbox(); });
   })();
+
+  // =====================================================
+  // I. CARGA DIFERIDA DE THREE.JS — el 3D no bloquea el primer render
+  // =====================================================
+  (function(){
+    if (REDUCED_MOTION) return;
+    const THREE_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    let loading = null;
+    function loadThree(){
+      if (window.THREE) return Promise.resolve();
+      if (!loading) loading = new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = THREE_SRC; s.async = true; s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+      return loading;
+    }
+    const idle = window.requestIdleCallback || (cb => setTimeout(cb, 250));
+    function safe(fn){ return () => { try { fn(); } catch (e) {} }; }
+
+    // Hero (solo desktop): después de que la página terminó de cargar
+    if (window.innerWidth >= 992 && document.getElementById('hero3dStage')) {
+      const start = () => idle(() => loadThree().then(safe(initHero3D)).catch(() => {}));
+      if (document.readyState === 'complete') start(); else window.addEventListener('load', start, { once: true });
+    }
+    // Máquina de ideas: cuando "Sobre mí" se acerca al viewport
+    const about = document.getElementById('aboutAvatarStage');
+    if (about && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        if (!entries.some(e => e.isIntersecting)) return;
+        io.disconnect();
+        loadThree().then(safe(initAbout3D)).catch(() => {});
+      }, { rootMargin: '500px 0px' });
+      io.observe(about);
+    }
+  })();
+
+  // =====================================================
+  // J. VIDEOS DE EXPERIENCIAS — se descargan y reproducen solo al verse
+  // =====================================================
+  (function(){
+    const videos = document.querySelectorAll('video[data-src]');
+    if (!videos.length) return;
+    function load(v){ if (!v.getAttribute('src')) { v.poster = v.dataset.poster; v.src = v.dataset.src; v.load(); } }
+    // El poster se pide un poco antes, para que nunca se vea la caja vacía
+    if ('IntersectionObserver' in window) {
+      const pio = new IntersectionObserver(entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.poster = e.target.dataset.poster; pio.unobserve(e.target); }
+      }), { rootMargin: '900px 0px' });
+      videos.forEach(v => pio.observe(v));
+    }
+    if (!('IntersectionObserver' in window)) { videos.forEach(v => { load(v); if (!REDUCED_MOTION) v.play().catch(() => {}); }); return; }
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(({ target: v, isIntersecting }) => {
+        if (isIntersecting) {
+          load(v);
+          if (!REDUCED_MOTION) v.play().catch(() => {});
+        } else if (!v.paused) {
+          v.pause();
+        }
+      });
+    }, { rootMargin: '200px 0px', threshold: 0.01 });
+    videos.forEach(v => io.observe(v));
+  })();
+
+  // =====================================================
+  // K. NAVBAR — indicador de sección activa (se desliza entre links)
+  // =====================================================
+  (function(){
+    const navEl = document.getElementById('navLinks');
+    const pill = document.getElementById('navIndicator');
+    if (!navEl || !pill) return;
+    const links = Array.from(navEl.querySelectorAll('a[href^="#"]'));
+    const byId = {};
+    links.forEach(a => { byId[a.getAttribute('href').slice(1)] = a; });
+    let active = null;
+
+    function moveTo(a){
+      if (!a || window.innerWidth < 992) { pill.style.opacity = '0'; return; }
+      pill.style.width = (a.offsetWidth + 22) + 'px';
+      pill.style.transform = 'translate(' + (a.offsetLeft - 11) + 'px,-50%)';
+      pill.style.opacity = '1';
+    }
+    function setActive(a){
+      if (active === a) return;
+      if (active) { active.classList.remove('is-active'); active.removeAttribute('aria-current'); }
+      active = a;
+      if (a) { a.classList.add('is-active'); a.setAttribute('aria-current', 'location'); }
+      if (!navEl.matches(':hover')) moveTo(active);
+    }
+
+    // Una banda delgada a ~40% de la altura de la pantalla decide la sección actual
+    const sections = Array.from(document.querySelectorAll('main section[id]'));
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) setActive(byId[e.target.id] || null); });
+      }, { rootMargin: '-40% 0px -55% 0px' });
+      sections.forEach(s => io.observe(s));
+    }
+
+    // Hover: la píldora sigue al cursor y regresa a la sección activa al salir
+    if (FINE_POINTER) {
+      links.forEach(a => a.addEventListener('mouseenter', () => moveTo(a)));
+      navEl.addEventListener('mouseleave', () => moveTo(active));
+    }
+    const refresh = () => moveTo(active);
+    window.addEventListener('resize', refresh);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+    window.__navRefresh = refresh;
+  })();
+
+  // =====================================================
+  // L. BOTONES MAGNÉTICOS — el CTA se inclina hacia el cursor
+  // =====================================================
+  (function(){
+    if (!FINE_POINTER || REDUCED_MOTION) return;
+    document.querySelectorAll('.btn-cta, [data-magnetic]').forEach(el => {
+      const strength = parseFloat(el.dataset.magnetic) || 0.32;
+      const MAX = 9;
+      let rect = null, raf = 0, tx = 0, ty = 0;
+      el.addEventListener('pointerenter', () => {
+        el.style.transition = 'transform 0.18s cubic-bezier(.2,.7,.2,1), box-shadow 0.15s ease, background 0.15s ease';
+        rect = el.getBoundingClientRect();
+      });
+      el.addEventListener('pointermove', e => {
+        if (!rect) return;
+        const clamp = v => Math.max(-MAX, Math.min(MAX, v));
+        tx = clamp((e.clientX - (rect.left + rect.width / 2)) * strength);
+        ty = clamp((e.clientY - (rect.top + rect.height / 2)) * strength);
+        if (!raf) raf = requestAnimationFrame(() => { raf = 0; el.style.transform = 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px)'; });
+      });
+      el.addEventListener('pointerleave', () => {
+        rect = null;
+        if (raf) { cancelAnimationFrame(raf); raf = 0; }
+        el.style.transition = 'transform 0.55s cubic-bezier(.25,1.6,.4,1), box-shadow 0.15s ease, background 0.15s ease';
+        el.style.transform = '';
+      });
+    });
+  })();
+
+  // =====================================================
+  // M. FOOTER — frase grande ajustada al ancho + luz que sigue al cursor
+  // =====================================================
+  (function(){
+    const link = document.getElementById('footerStatement');
+    const text = document.getElementById('footerStatementText');
+    if (!link || !text) return;
+
+    // Ajusta el tamaño para que la frase llene exactamente el ancho disponible
+    function fit(){
+      if (window.innerWidth < 576) { text.style.fontSize = ''; return; }
+      text.style.fontSize = '100px';
+      const avail = link.clientWidth;
+      const natural = text.scrollWidth;
+      if (natural > 0) text.style.fontSize = Math.min(100 * avail / natural, 210).toFixed(2) + 'px';
+    }
+    fit();
+    window.addEventListener('resize', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    window.__fitFooter = fit;
+
+    if (FINE_POINTER && !REDUCED_MOTION) {
+      let raf = 0, mx = 0, my = 0;
+      link.addEventListener('pointermove', e => {
+        const r = text.getBoundingClientRect();
+        mx = e.clientX - r.left; my = e.clientY - r.top;
+        if (!raf) raf = requestAnimationFrame(() => {
+          raf = 0;
+          text.style.setProperty('--mx', mx + 'px');
+          text.style.setProperty('--my', my + 'px');
+        });
+      });
+      link.addEventListener('pointerenter', () => link.classList.add('is-lit'));
+      link.addEventListener('pointerleave', () => link.classList.remove('is-lit'));
+    }
+  })();
+
+  // =====================================================
+  // N. RELOJ — hora local de Guatemala en el footer
+  // =====================================================
+  (function(){
+    const el = document.getElementById('localTime');
+    if (!el || !window.Intl) return;
+    function tick(){
+      const lang = window.__currentLang || 'en';
+      const now = new Date();
+      el.textContent = new Intl.DateTimeFormat(lang === 'es' ? 'es-GT' : 'en-US', {
+        timeZone: 'America/Guatemala', hour: 'numeric', minute: '2-digit', hour12: lang !== 'es'
+      }).format(now) + ' GMT-6';
+      el.setAttribute('datetime', now.toISOString());
+    }
+    tick();
+    // Se sincroniza con el cambio de minuto
+    setTimeout(() => { tick(); setInterval(tick, 60000); }, (60 - new Date().getSeconds()) * 1000 + 50);
+    window.__tickClock = tick;
+  })();
+
+  window.__afterLang = function(){
+    if (window.__navRefresh) window.__navRefresh();
+    if (window.__fitFooter) window.__fitFooter();
+    if (window.__tickClock) window.__tickClock();
+  };
 </script>
 </body>
 </html>
