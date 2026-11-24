@@ -92,11 +92,6 @@ a{ text-decoration:none; color:inherit; }
   font-weight:500;
   display:inline-flex; align-items:center; gap:0.5rem;
 }
-.eyebrow::before{
-  content:''; width:6px; height:6px; border-radius:50%;
-  background:var(--indigo-bright); box-shadow:0 0 10px var(--indigo-glow);
-  flex-shrink:0;
-}
 .eyebrow.on-dark{ color:var(--indigo-bright); }
 
 .section-pad{ padding:6.5rem 0; }
@@ -272,6 +267,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   border-bottom:1px solid var(--border);
 }
 .hero::before{
+  display:none;
   content:'';
   position:absolute; inset:0;
   background-image:radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px);
@@ -280,14 +276,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   mask-image:linear-gradient(180deg, rgba(0,0,0,0.9), transparent 75%);
   pointer-events:none;
 }
+/* El estudio: escena 3D a todo lo ancho (póster mientras carga y en móvil) */
 .hero-3d-stage{
-  position:absolute; top:0; right:0; width:58%; height:100%;
-  z-index:1; pointer-events:none;
-  -webkit-mask-image:linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.85) 32%, rgba(0,0,0,0.85) 100%);
-  mask-image:linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.85) 32%, rgba(0,0,0,0.85) 100%);
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:#08090A url("assets/studio-poster.webp") 62% 50% / cover no-repeat;
 }
-.hero-3d-stage canvas{ display:block; }
-@media (max-width:991.98px){ .hero-3d-stage{ display:none; } }
+.hero-3d-stage canvas{ display:block; position:absolute; inset:0; width:100% !important; height:100% !important; }
+.hero-3d-stage::after{
+  content:''; position:absolute; inset:0; z-index:1;
+  background:
+    linear-gradient(90deg, rgba(8,9,10,0.94) 0%, rgba(8,9,10,0.82) 30%, rgba(8,9,10,0.38) 58%, rgba(8,9,10,0.3) 100%),
+    linear-gradient(180deg, rgba(8,9,10,0.35) 0%, transparent 22%, transparent 70%, rgba(8,9,10,0.9) 100%);
+}
+@media (max-width:991.98px){
+  .hero-3d-stage{ background-position:70% 50%; }
+  .hero-3d-stage::after{ background:linear-gradient(180deg, rgba(8,9,10,0.7) 0%, rgba(8,9,10,0.86) 45%, rgba(8,9,10,0.95) 100%); }
+}
 .hero-grid{
   display:grid; grid-template-columns:1.05fr 0.95fr; gap:3.5rem; align-items:center;
   position:relative; z-index:2;
@@ -387,7 +391,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   display:block; font-family:var(--font-mono); font-size:0.64rem; color:var(--indigo-bright);
   text-transform:uppercase; letter-spacing:0.09em; margin-bottom:0.45rem; opacity:0.85;
 }
-.idea-readout-label::before{ content:'● '; color:var(--indigo-bright); }
+
 .idea-readout-text{
   font-family:var(--font-mono); font-size:0.85rem; color:var(--text-soft); line-height:1.55;
   min-height:2.6em; transition:opacity 0.25s ease; margin:0;
@@ -654,10 +658,21 @@ footer.site-footer{ background:var(--bg); color:var(--text-faint); padding:3.5re
   position:relative; overflow:hidden;
 }
 .manifesto-inner{ max-width:760px; margin:0 auto; text-align:center; position:relative; z-index:1; }
-.reveal-text{
-  font-family:var(--font-display); font-weight:600;
-  font-size:clamp(1.35rem, 3vw, 2.15rem); line-height:1.45; letter-spacing:-0.01em;
-  color:var(--text); margin-top:1.1rem;
+.manifesto-inner{ max-width:980px; }
+.spot-text{
+  --spot:0px;
+  font-family:var(--font-display); font-weight:700;
+  font-size:clamp(1.9rem, 4.4vw, 3.5rem); line-height:1.12; letter-spacing:-0.035em;
+  margin:1.2rem 0 0; padding-bottom:0.08em;
+  background:
+    radial-gradient(circle var(--spot) at var(--mx, 50%) var(--my, 50%), #fff 0%, var(--indigo-bright) 45%, transparent 100%),
+    linear-gradient(180deg, rgba(247,248,248,0.62) 0%, rgba(247,248,248,0.38) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  transition:--spot 0.6s cubic-bezier(.2,.7,.2,1);
+}
+.spot-text.is-lit{ --spot:280px; }
+@media (hover:none){
+  .spot-text{ background:linear-gradient(180deg, #fff 0%, rgba(247,248,248,0.72) 100%); -webkit-background-clip:text; background-clip:text; }
 }
 .reveal-word{ display:inline-block; white-space:nowrap; }
 .reveal-letter{
@@ -782,42 +797,12 @@ body{ overflow-x:hidden; }
    FOOTER — frase grande (large type) + hora local
    ===================================================== */
 @property --spot{ syntax:'<length>'; inherits:true; initial-value:0px; }
-.footer-statement{
-  display:block; margin:0.5rem 0 2.25rem; padding-top:2.25rem; border-top:1px solid var(--border);
-  text-decoration:none; color:inherit; --spot:0px;
-  transition:--spot 0.6s cubic-bezier(.2,.7,.2,1);
-}
-.footer-statement.is-lit{ --spot:260px; }
-.footer-statement-text{
-  display:block; width:max-content; max-width:100%;
-  font-family:var(--font-display); font-weight:700; line-height:0.95; letter-spacing:-0.055em;
-  font-size:clamp(2.4rem, 11vw, 4rem); white-space:nowrap; padding-bottom:0.08em;
-  background:
-    radial-gradient(circle var(--spot) at var(--mx, 50%) var(--my, 50%), #fff 0%, var(--indigo-bright) 45%, transparent 100%),
-    linear-gradient(180deg, rgba(247,248,248,0.3) 0%, rgba(247,248,248,0.1) 100%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-}
-@media (max-width:575.98px){
-  .footer-statement-text{ white-space:normal; width:auto; font-size:clamp(2.4rem, 12.5vw, 3.6rem); }
-}
-.footer-statement-cta{
-  display:inline-flex; align-items:center; gap:0.45rem; margin-top:1.1rem;
-  font-family:var(--font-mono); font-size:0.78rem; letter-spacing:0.04em; text-transform:uppercase;
-  color:var(--text-faint); transition:color 0.25s ease, gap 0.25s ease;
-}
-.footer-statement:hover .footer-statement-cta, .footer-statement:focus-visible .footer-statement-cta{ color:var(--indigo-bright); gap:0.7rem; }
-.footer-statement:focus-visible{ outline:2px solid var(--indigo-bright); outline-offset:6px; border-radius:6px; }
 .footer-meta{ display:inline-flex; align-items:center; flex-wrap:wrap; gap:0.5rem; }
+.footer-cta{ margin-top:1.3rem; }
+.footer-credit{ margin:1.25rem 0 0; font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.02em; color:rgba(247,248,248,0.28); }
+.footer-credit a{ color:inherit; }
+.footer-credit a:hover{ color:var(--text-soft); }
 .footer-time{ font-family:var(--font-mono); font-size:0.74rem; color:var(--text-soft); font-variant-numeric:tabular-nums; }
-.live-dot{
-  width:7px; height:7px; border-radius:50%; background:var(--teal); flex-shrink:0;
-  box-shadow:0 0 0 0 rgba(85,214,190,0.5); animation:livePulse 2.4s ease-out infinite;
-}
-@keyframes livePulse{
-  0%{ box-shadow:0 0 0 0 rgba(85,214,190,0.45); }
-  70%{ box-shadow:0 0 0 7px rgba(85,214,190,0); }
-  100%{ box-shadow:0 0 0 0 rgba(85,214,190,0); }
-}
 
 /* =====================================================
    RENDIMIENTO — canvases 3D aparecen suave al estar listos
@@ -826,7 +811,6 @@ canvas.gl-fade{ opacity:0; transition:opacity 0.9s ease; }
 canvas.gl-fade.is-ready{ opacity:1; }
 
 @media (prefers-reduced-motion: reduce){
-  .live-dot{ animation:none; }
   .nav-indicator, .nav-progress span{ transition:none; }
 }
 
@@ -916,10 +900,10 @@ html.lenis, html.lenis body{ height:auto; }
 
     <nav class="nav-links" id="navLinks" aria-label="Navigation principal" data-lenis-prevent>
       <span class="nav-indicator" id="navIndicator" aria-hidden="true"></span>
-      <a href="#sobre-mi" data-i18n="nav.about">About</a>
-      <a href="#servicios" data-i18n="nav.services">Services</a>
       <a href="#portafolio" data-i18n="nav.portfolio">Portfolio</a>
       <a href="#experiencias" data-i18n="nav.experiences">Experiences</a>
+      <a href="#sobre-mi" data-i18n="nav.about">About</a>
+      <a href="#servicios" data-i18n="nav.services">Services</a>
       <a href="#proceso" data-i18n="nav.process">Process</a>
       <div class="lang-switch" role="group" aria-label="Selector de idioma / Language selector">
         <button type="button" id="langEs" aria-pressed="false" data-lang="es">ES</button>
@@ -945,7 +929,6 @@ html.lenis, html.lenis body{ height:auto; }
   <div class="container-xl-custom">
     <div class="hero-grid">
       <div>
-        <span class="eyebrow on-dark" data-i18n="hero.eyebrow">UX Strategy · Product Design · AI</span>
         <h1 data-i18n="hero.title">Your product doesn't have a design problem. It has a <em>system</em> quietly costing you money.</h1>
         <p class="lead-text" data-i18n="hero.lead">I find the exact point where your product's complexity is costing you adoption, sales, or team speed.</p>
         <div class="hero-ctas">
@@ -1009,6 +992,172 @@ html.lenis, html.lenis body{ height:auto; }
         <button type="button" class="console-reset-btn" id="consoleResetBtn" style="display:none;" data-i18n="console.resetBtn">↺ Reset demo</button>
         <div aria-live="polite" class="visually-hidden" id="consoleLiveRegion"></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     PORTAFOLIO / CASOS DE ÉXITO
+===================================================== -->
+<section class="section-pad" id="portafolio">
+  <div class="container-xl-custom">
+    <div class="section-head mx-auto reveal">
+      <span class="eyebrow" data-i18n="portfolio.eyebrow">Portfolio</span>
+      <h2 data-i18n="portfolio.title">Recent case studies</h2>
+      <p data-i18n="portfolio.subtitle">Real projects, with the role and tools I used on each one.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-1">
+        <div class="case-card">
+          <div class="case-media">
+            <button type="button" class="case-cover" data-gallery="aims360" data-index="0" aria-label="Ver imágenes del proyecto AIMS360">
+              <img src="assets/aims-login-cover.webp" alt="AIMS360 — pantalla de acceso Runway Login" width="720" height="450" loading="lazy" decoding="async">
+            </button>
+            <div class="case-thumbs">
+              <button type="button" class="case-thumb" data-gallery="aims360" data-index="1" aria-label="Ver imagen 2 de AIMS360"><img src="assets/aims-ots-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+              <button type="button" class="case-thumb" data-gallery="aims360" data-index="2" aria-label="Ver imagen 3 de AIMS360"><img src="assets/aims-roles-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+              <button type="button" class="case-thumb" data-gallery="aims360" data-index="3" aria-label="Ver imagen 4 de AIMS360"><img src="assets/aims-styles-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+            </div>
+          </div>
+          <div class="case-body">
+            <div class="case-top"><span class="case-id">CASE&nbsp;·&nbsp;01</span></div>
+            <span class="case-project">AIMS360</span>
+            <span class="case-tag" data-i18n="portfolio.c1tag">Fashion ERP · SaaS</span>
+            <h3 style="font-size:1.05rem;" data-i18n="portfolio.c1title">From native desktop app to a web ERP used by 2,500 stores</h3>
+            <p class="case-body-text" data-i18n="portfolio.c1desc">AIMS360 was losing adoption because its desktop interface couldn't grow with the business. I redesigned the system end to end and laid the groundwork for a web ERP now used by 2,500 stores, without losing users who'd spent years running the previous version.</p>
+            <div class="case-meta"><span>Figma</span><span>Claude Code</span><span>Design System</span></div>
+            <div class="case-ds-row">
+              <button type="button" class="case-ds-btn" id="openDesignSystem"><svg class="bi" aria-hidden="true"><use href="#i-box-arrow-up-right"/></svg> <span data-i18n="portfolio.c1dsBtn">View the design system</span></button>
+              <p style="margin:0.5rem 0 0; font-size:0.78rem; color:var(--text-faint);" data-i18n="portfolio.c1dsNote">Built token-by-token with the engineering team, so design and code never drift apart.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-2">
+        <div class="case-card">
+          <div class="case-media">
+            <button type="button" class="case-cover" data-gallery="mosaik" data-index="0" aria-label="Ver imágenes del proyecto Mosaik">
+              <img src="assets/mosaik-1-cover.webp" alt="Mosaik — dashboard de agente con propiedades y transacciones" width="720" height="450" loading="lazy" decoding="async">
+            </button>
+            <div class="case-thumbs">
+              <button type="button" class="case-thumb" data-gallery="mosaik" data-index="1" aria-label="Ver imagen 2 de Mosaik"><img src="assets/mosaik-2-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+              <button type="button" class="case-thumb" data-gallery="mosaik" data-index="2" aria-label="Ver imagen 3 de Mosaik"><img src="assets/mosaik-3-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+            </div>
+          </div>
+          <div class="case-body">
+            <div class="case-top"><span class="case-id">CASE&nbsp;·&nbsp;02</span></div>
+            <span class="case-project">Mosaik</span>
+            <span class="case-tag" data-i18n="portfolio.c2tag">Real estate · Web &amp; Mobile</span>
+            <h3 style="font-size:1.05rem;" data-i18n="portfolio.c2title">One flow for buyers, agents and vendors</h3>
+            <p class="case-body-text" data-i18n="portfolio.c2desc">Buyers, agents and vendors were operating on different logic inside the same real estate platform, creating friction at every transaction. I designed a single end-to-end flow that respects the emotional urgency of buying a home without sacrificing agent and vendor operations.</p>
+            <div class="case-meta"><span>Figma</span><span>Jira</span><span>Miro</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 reveal reveal-delay-3">
+        <div class="case-card">
+          <div class="case-media">
+            <button type="button" class="case-cover" data-gallery="bancoindustrial" data-index="0" aria-label="Ver imágenes del proyecto Banco Industrial">
+              <img src="assets/bi-1-cover.webp" alt="Banco Industrial — sitio para personas" width="720" height="450" loading="lazy" decoding="async">
+            </button>
+            <div class="case-thumbs">
+              <button type="button" class="case-thumb" data-gallery="bancoindustrial" data-index="1" aria-label="Ver imagen 2 de Banco Industrial"><img src="assets/bi-2-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+              <button type="button" class="case-thumb" data-gallery="bancoindustrial" data-index="2" aria-label="Ver imagen 3 de Banco Industrial"><img src="assets/bi-3-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
+            </div>
+          </div>
+          <div class="case-body">
+            <div class="case-top"><span class="case-id">CASE&nbsp;·&nbsp;03</span></div>
+            <span class="case-project">Banco Industrial</span>
+            <span class="case-tag" data-i18n="portfolio.c3tag">Fintech · Internal platforms</span>
+            <h3 style="font-size:1.05rem;" data-i18n="portfolio.c3title">Order across an ecosystem of internal tools</h3>
+            <p class="case-body-text" data-i18n="portfolio.c3desc">Thousands of employees at one of Guatemala's largest banks depended on internal tools that didn't talk to each other. I stepped in to bring coherence to the ecosystem, cutting the time the team lost relearning different interfaces for the same tasks.</p>
+            <div class="case-meta"><span>Figma</span><span>Jira</span><span>Miro</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     EXPERIENCIAS DIGITALES — 3D interactivo / activaciones BTL
+===================================================== -->
+<section class="section-pad" id="experiencias">
+  <div class="container-xl-custom">
+    <div class="section-head mx-auto reveal">
+      <span class="eyebrow" data-i18n="experiences.eyebrow">Digital experiences</span>
+      <h2 data-i18n="experiences.title">When the product is the interaction itself</h2>
+      <p data-i18n="experiences.subtitle">Interactive 3D and BTL builds where people don't read the product — they play with it.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 reveal reveal-delay-1">
+        <div class="case-card">
+          <div class="exp-video-wrap">
+            <span class="exp-badge" data-i18n="experiences.avatrBadge">Interactive 3D</span>
+            <video data-src="assets/experiences/avatr-studio-loop.mp4" data-poster="assets/experiences/avatr-studio-poster.webp" muted loop playsinline preload="none" aria-label="AVATR 3D configurator demo"></video>
+          </div>
+          <div class="case-body">
+            <div class="case-top"><span class="case-id">EXP&nbsp;·&nbsp;01</span></div>
+            <span class="case-project">AVATR</span>
+            <span class="case-tag" data-i18n="experiences.avatrTag">Automotive · 3D configurator</span>
+            <h3 style="font-size:1.05rem;" data-i18n="experiences.avatrTitle">A car you can walk around before it exists in the showroom</h3>
+            <p class="case-body-text" data-i18n="experiences.avatrDesc">A dealership can't put every color and scene in front of a buyer. I built a real-time 3D configurator — open the doors, zoom into the details, change the setting or put it in motion — so the decision to visit happens before the visit.</p>
+            <div class="case-meta"><span>Three.js</span><span>WebGL</span><span>3D</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 reveal reveal-delay-2">
+        <div class="case-card">
+          <div class="exp-trio">
+            <div class="exp-trio-item">
+              <video data-src="assets/experiences/walmart-ruleta.mp4" data-poster="assets/experiences/walmart-ruleta-poster.webp" muted loop playsinline preload="none" aria-label="Walmart roulette activation demo"></video>
+              <span class="exp-trio-label" data-i18n="experiences.btlRuleta">Walmart — prize wheel</span>
+            </div>
+            <div class="exp-trio-item">
+              <video data-src="assets/experiences/walmart-sobres.mp4" data-poster="assets/experiences/walmart-sobres-poster.webp" muted loop playsinline preload="none" aria-label="Walmart surprise envelopes activation demo"></video>
+              <span class="exp-trio-label" data-i18n="experiences.btlSobres">Walmart — surprise envelopes</span>
+            </div>
+            <div class="exp-trio-item">
+              <video data-src="assets/experiences/paiz-tragamonedas.mp4" data-poster="assets/experiences/paiz-tragamonedas-poster.webp" muted loop playsinline preload="none" aria-label="Paiz slot machine activation demo"></video>
+              <span class="exp-trio-label" data-i18n="experiences.btlTraga">Paiz — slot machine</span>
+            </div>
+          </div>
+          <div class="case-body">
+            <div class="case-top"><span class="case-id">EXP&nbsp;·&nbsp;02</span></div>
+            <span class="case-project">Walmart &amp; Paiz</span>
+            <span class="case-tag" data-i18n="experiences.btlTag">Retail · BTL activations</span>
+            <h3 style="font-size:1.05rem;" data-i18n="experiences.btlTitle">Touch-screen games that move real inventory on the sales floor</h3>
+            <p class="case-body-text" data-i18n="experiences.btlDesc">Three in-store touch activations for Walmart and Paiz, each tied to a different promotion. The games aren't decoration — every spin and every envelope is wired to a live prize inventory the store team controls.</p>
+            <div class="case-meta"><span>HTML5</span><span>Canvas</span><span>Touch UI</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ds-overlay" id="dsOverlay" data-lenis-prevent>
+  <div class="ds-modal" role="dialog" aria-modal="true" aria-labelledby="dsModalTitle">
+    <div class="ds-modal-head">
+      <span id="dsModalTitle" data-i18n="ds.modalTitle">AIMS360 — Design System</span>
+      <button type="button" class="ds-close" id="dsClose" aria-label="Close" data-i18n-aria="ds.close">&times;</button>
+    </div>
+    <iframe id="dsFrame" title="AIMS360 Design System" loading="lazy"></iframe>
+  </div>
+</div>
+
+<!-- =====================================================
+     MANIFIESTO — frase animada con efecto de revelado al cursor
+===================================================== -->
+<section class="section-pad manifesto-section" id="manifiesto">
+  <div class="particle-field" data-particles aria-hidden="true"></div>
+  <div class="container-xl-custom">
+    <div class="manifesto-inner reveal">
+      <span class="eyebrow on-dark" style="justify-content:center;" data-i18n="manifesto.eyebrow">How I think</span>
+      <p class="spot-text" id="manifestoText" data-spotlight data-i18n="manifesto.phrase">Behind every simple system are hundreds of invisible decisions. That's the work that matters most.</p>
     </div>
   </div>
 </section>
@@ -1101,175 +1250,6 @@ html.lenis, html.lenis body{ height:auto; }
 </section>
 
 <!-- =====================================================
-     MANIFIESTO — frase animada con efecto de revelado al cursor
-===================================================== -->
-<section class="section-pad manifesto-section" id="manifiesto">
-  <div class="particle-field" data-particles aria-hidden="true"></div>
-  <div class="container-xl-custom">
-    <div class="manifesto-inner reveal">
-      <span class="eyebrow on-dark" style="justify-content:center;" data-i18n="manifesto.eyebrow">How I think</span>
-      <p class="reveal-text">
-        <span id="manifestoLetters" aria-hidden="true"></span>
-        <span class="visually-hidden" id="manifestoSource" data-i18n="manifesto.phrase">Behind every simple system are hundreds of invisible decisions. That's the work that matters most.</span>
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- =====================================================
-     PORTAFOLIO / CASOS DE ÉXITO
-===================================================== -->
-<section class="section-pad" id="portafolio">
-  <div class="container-xl-custom">
-    <div class="section-head mx-auto reveal">
-      <span class="eyebrow" data-i18n="portfolio.eyebrow">Portfolio</span>
-      <h2 data-i18n="portfolio.title">Recent case studies</h2>
-      <p data-i18n="portfolio.subtitle">Real projects, with the role and tools I used on each one.</p>
-    </div>
-
-    <div class="row g-4">
-      <div class="col-md-6 col-lg-4 reveal reveal-delay-1">
-        <div class="case-card">
-          <div class="case-media">
-            <button type="button" class="case-cover" data-gallery="aims360" data-index="0" aria-label="Ver imágenes del proyecto AIMS360">
-              <img src="assets/aims-login-cover.webp" alt="AIMS360 — pantalla de acceso Runway Login" width="720" height="450" loading="lazy" decoding="async">
-            </button>
-            <div class="case-thumbs">
-              <button type="button" class="case-thumb" data-gallery="aims360" data-index="1" aria-label="Ver imagen 2 de AIMS360"><img src="assets/aims-ots-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
-              <button type="button" class="case-thumb" data-gallery="aims360" data-index="2" aria-label="Ver imagen 3 de AIMS360"><img src="assets/aims-roles-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
-              <button type="button" class="case-thumb" data-gallery="aims360" data-index="3" aria-label="Ver imagen 4 de AIMS360"><img src="assets/aims-styles-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
-            </div>
-          </div>
-          <div class="case-body">
-            <div class="case-top"><span class="case-id">CASE&nbsp;·&nbsp;01</span><span class="case-dot dot-indigo" aria-hidden="true"></span></div>
-            <span class="case-project">AIMS360</span>
-            <span class="case-tag" data-i18n="portfolio.c1tag">Fashion ERP · SaaS</span>
-            <h3 style="font-size:1.05rem;" data-i18n="portfolio.c1title">From native desktop app to a web ERP used by 2,500 stores</h3>
-            <p class="case-body-text" data-i18n="portfolio.c1desc">AIMS360 was losing adoption because its desktop interface couldn't grow with the business. I redesigned the system end to end and laid the groundwork for a web ERP now used by 2,500 stores, without losing users who'd spent years running the previous version.</p>
-            <div class="case-meta"><span>Figma</span><span>Claude Code</span><span>Design System</span></div>
-            <div class="case-ds-row">
-              <button type="button" class="case-ds-btn" id="openDesignSystem"><svg class="bi" aria-hidden="true"><use href="#i-box-arrow-up-right"/></svg> <span data-i18n="portfolio.c1dsBtn">View the design system</span></button>
-              <p style="margin:0.5rem 0 0; font-size:0.78rem; color:var(--text-faint);" data-i18n="portfolio.c1dsNote">Built token-by-token with the engineering team, so design and code never drift apart.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 reveal reveal-delay-2">
-        <div class="case-card">
-          <div class="case-media">
-            <button type="button" class="case-cover" data-gallery="mosaik" data-index="0" aria-label="Ver imágenes del proyecto Mosaik">
-              <img src="assets/mosaik-1-cover.webp" alt="Mosaik — dashboard de agente con propiedades y transacciones" width="720" height="450" loading="lazy" decoding="async">
-            </button>
-            <div class="case-thumbs">
-              <button type="button" class="case-thumb" data-gallery="mosaik" data-index="1" aria-label="Ver imagen 2 de Mosaik"><img src="assets/mosaik-2-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
-              <button type="button" class="case-thumb" data-gallery="mosaik" data-index="2" aria-label="Ver imagen 3 de Mosaik"><img src="assets/mosaik-3-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
-            </div>
-          </div>
-          <div class="case-body">
-            <div class="case-top"><span class="case-id">CASE&nbsp;·&nbsp;02</span><span class="case-dot dot-teal" aria-hidden="true"></span></div>
-            <span class="case-project">Mosaik</span>
-            <span class="case-tag" data-i18n="portfolio.c2tag">Real estate · Web &amp; Mobile</span>
-            <h3 style="font-size:1.05rem;" data-i18n="portfolio.c2title">One flow for buyers, agents and vendors</h3>
-            <p class="case-body-text" data-i18n="portfolio.c2desc">Buyers, agents and vendors were operating on different logic inside the same real estate platform, creating friction at every transaction. I designed a single end-to-end flow that respects the emotional urgency of buying a home without sacrificing agent and vendor operations.</p>
-            <div class="case-meta"><span>Figma</span><span>Jira</span><span>Miro</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 reveal reveal-delay-3">
-        <div class="case-card">
-          <div class="case-media">
-            <button type="button" class="case-cover" data-gallery="bancoindustrial" data-index="0" aria-label="Ver imágenes del proyecto Banco Industrial">
-              <img src="assets/bi-1-cover.webp" alt="Banco Industrial — sitio para personas" width="720" height="450" loading="lazy" decoding="async">
-            </button>
-            <div class="case-thumbs">
-              <button type="button" class="case-thumb" data-gallery="bancoindustrial" data-index="1" aria-label="Ver imagen 2 de Banco Industrial"><img src="assets/bi-2-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
-              <button type="button" class="case-thumb" data-gallery="bancoindustrial" data-index="2" aria-label="Ver imagen 3 de Banco Industrial"><img src="assets/bi-3-mini.webp" alt="" width="130" height="96" loading="lazy" decoding="async"></button>
-            </div>
-          </div>
-          <div class="case-body">
-            <div class="case-top"><span class="case-id">CASE&nbsp;·&nbsp;03</span><span class="case-dot dot-amber" aria-hidden="true"></span></div>
-            <span class="case-project">Banco Industrial</span>
-            <span class="case-tag" data-i18n="portfolio.c3tag">Fintech · Internal platforms</span>
-            <h3 style="font-size:1.05rem;" data-i18n="portfolio.c3title">Order across an ecosystem of internal tools</h3>
-            <p class="case-body-text" data-i18n="portfolio.c3desc">Thousands of employees at one of Guatemala's largest banks depended on internal tools that didn't talk to each other. I stepped in to bring coherence to the ecosystem, cutting the time the team lost relearning different interfaces for the same tasks.</p>
-            <div class="case-meta"><span>Figma</span><span>Jira</span><span>Miro</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =====================================================
-     EXPERIENCIAS DIGITALES — 3D interactivo / activaciones BTL
-===================================================== -->
-<section class="section-pad" id="experiencias">
-  <div class="container-xl-custom">
-    <div class="section-head mx-auto reveal">
-      <span class="eyebrow" data-i18n="experiences.eyebrow">Digital experiences</span>
-      <h2 data-i18n="experiences.title">When the product is the interaction itself</h2>
-      <p data-i18n="experiences.subtitle">Interactive 3D and BTL builds where people don't read the product — they play with it.</p>
-    </div>
-
-    <div class="row g-4">
-      <div class="col-md-6 reveal reveal-delay-1">
-        <div class="case-card">
-          <div class="exp-video-wrap">
-            <span class="exp-badge" data-i18n="experiences.avatrBadge">Interactive 3D</span>
-            <video data-src="assets/experiences/avatr-studio-loop.mp4" data-poster="assets/experiences/avatr-studio-poster.webp" muted loop playsinline preload="none" aria-label="AVATR 3D configurator demo"></video>
-          </div>
-          <div class="case-body">
-            <div class="case-top"><span class="case-id">EXP&nbsp;·&nbsp;01</span><span class="case-dot dot-indigo" aria-hidden="true"></span></div>
-            <span class="case-project">AVATR</span>
-            <span class="case-tag" data-i18n="experiences.avatrTag">Automotive · 3D configurator</span>
-            <h3 style="font-size:1.05rem;" data-i18n="experiences.avatrTitle">A car you can walk around before it exists in the showroom</h3>
-            <p class="case-body-text" data-i18n="experiences.avatrDesc">A dealership can't put every color and scene in front of a buyer. I built a real-time 3D configurator — open the doors, zoom into the details, change the setting or put it in motion — so the decision to visit happens before the visit.</p>
-            <div class="case-meta"><span>Three.js</span><span>WebGL</span><span>3D</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6 reveal reveal-delay-2">
-        <div class="case-card">
-          <div class="exp-trio">
-            <div class="exp-trio-item">
-              <video data-src="assets/experiences/walmart-ruleta.mp4" data-poster="assets/experiences/walmart-ruleta-poster.webp" muted loop playsinline preload="none" aria-label="Walmart roulette activation demo"></video>
-              <span class="exp-trio-label" data-i18n="experiences.btlRuleta">Walmart — prize wheel</span>
-            </div>
-            <div class="exp-trio-item">
-              <video data-src="assets/experiences/walmart-sobres.mp4" data-poster="assets/experiences/walmart-sobres-poster.webp" muted loop playsinline preload="none" aria-label="Walmart surprise envelopes activation demo"></video>
-              <span class="exp-trio-label" data-i18n="experiences.btlSobres">Walmart — surprise envelopes</span>
-            </div>
-            <div class="exp-trio-item">
-              <video data-src="assets/experiences/paiz-tragamonedas.mp4" data-poster="assets/experiences/paiz-tragamonedas-poster.webp" muted loop playsinline preload="none" aria-label="Paiz slot machine activation demo"></video>
-              <span class="exp-trio-label" data-i18n="experiences.btlTraga">Paiz — slot machine</span>
-            </div>
-          </div>
-          <div class="case-body">
-            <div class="case-top"><span class="case-id">EXP&nbsp;·&nbsp;02</span><span class="case-dot dot-teal" aria-hidden="true"></span></div>
-            <span class="case-project">Walmart &amp; Paiz</span>
-            <span class="case-tag" data-i18n="experiences.btlTag">Retail · BTL activations</span>
-            <h3 style="font-size:1.05rem;" data-i18n="experiences.btlTitle">Touch-screen games that move real inventory on the sales floor</h3>
-            <p class="case-body-text" data-i18n="experiences.btlDesc">Three in-store touch activations for Walmart and Paiz, each tied to a different promotion. The games aren't decoration — every spin and every envelope is wired to a live prize inventory the store team controls.</p>
-            <div class="case-meta"><span>HTML5</span><span>Canvas</span><span>Touch UI</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="ds-overlay" id="dsOverlay" data-lenis-prevent>
-  <div class="ds-modal" role="dialog" aria-modal="true" aria-labelledby="dsModalTitle">
-    <div class="ds-modal-head">
-      <span id="dsModalTitle" data-i18n="ds.modalTitle">AIMS360 — Design System</span>
-      <button type="button" class="ds-close" id="dsClose" aria-label="Close" data-i18n-aria="ds.close">&times;</button>
-    </div>
-    <iframe id="dsFrame" title="AIMS360 Design System" loading="lazy"></iframe>
-  </div>
-</div>
-
-<!-- =====================================================
      PROCESO
 ===================================================== -->
 <section class="section-pad process-section" id="proceso">
@@ -1345,13 +1325,14 @@ html.lenis, html.lenis body{ height:auto; }
           <svg width="616" height="379" style="width:46px;height:auto;" viewBox="0 0 616 379" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M106.137 287.677H0L6.43253 12.5078H144.732L159.741 105.065H162.958L177.967 12.5078H315.194L321.627 287.677H215.49V144.732H212.274L189.76 287.677H131.867L109.353 141.158H106.137V287.677Z" fill="currentColor"/><path d="M615.26 287.892H499.379C498.172 282.158 497.116 276.273 496.21 270.238C495.607 263.901 495.305 256.356 495.305 247.605H491.231C491.231 253.942 488.968 260.883 484.441 268.427C480.216 275.67 473.276 282.007 463.619 287.439C453.962 292.569 440.986 295.134 424.69 295.134C402.359 295.134 384.705 291.362 371.729 283.818C358.753 276.273 349.549 266.617 344.117 254.847C338.685 242.777 335.969 229.8 335.969 215.919V194.191C335.969 165.221 345.022 144.097 363.128 130.819C381.235 117.541 411.865 110.902 455.018 110.902C461.054 110.902 467.089 111.053 473.125 111.354C479.462 111.656 486.101 112.109 493.042 112.712C493.645 107.582 492.74 103.81 490.326 101.396C488.213 98.9816 485.497 97.6236 482.178 97.3218C476.444 96.7183 470.861 96.2656 465.429 95.9639C460.299 95.3603 455.169 95.0585 450.039 95.0585C425.897 95.0585 405.527 97.9254 388.93 103.659C372.634 109.393 359.809 114.976 350.454 120.407L342.306 22.633C368.862 14.7869 393.607 9.0532 416.542 5.43193C439.779 1.81065 461.054 0 480.367 0C522.012 0 554.151 8.44966 576.784 25.349C599.718 41.9465 611.186 66.2392 611.186 98.2272V235.383C612.091 253.188 613.449 270.691 615.26 287.892ZM483.988 202.792V174.274C483.988 173.067 483.385 170.804 482.178 167.484C481.273 163.863 477.802 162.052 471.767 162.052C465.731 162.052 462.11 163.863 460.903 167.484C459.998 170.804 459.545 173.067 459.545 174.274V202.792C459.545 203.697 459.998 205.96 460.903 209.581C462.11 213.203 465.731 215.013 471.767 215.013C477.802 215.013 481.273 213.203 482.178 209.581C483.385 205.96 483.988 203.697 483.988 202.792Z" fill="currentColor"/><path d="M580.176 378.748C575.793 378.748 571.933 377.771 568.598 375.817C565.31 373.864 562.761 370.981 560.95 367.169C559.14 363.31 558.234 358.569 558.234 352.946C558.234 347.276 559.14 342.535 560.95 338.723C562.761 334.911 565.31 332.028 568.598 330.075C571.933 328.121 575.793 327.145 580.176 327.145C584.608 327.145 588.467 328.121 591.755 330.075C595.043 332.028 597.592 334.911 599.403 338.723C601.213 342.535 602.119 347.276 602.119 352.946C602.119 358.569 601.213 363.31 599.403 367.169C597.592 370.981 595.043 373.864 591.755 375.817C588.467 377.771 584.608 378.748 580.176 378.748ZM580.176 369.099C582.368 369.099 584.227 368.622 585.751 367.669C587.324 366.669 588.515 365.239 589.325 363.381C590.183 361.523 590.611 359.283 590.611 356.663V349.23C590.611 346.561 590.183 344.322 589.325 342.511C588.515 340.653 587.324 339.247 585.751 338.294C584.227 337.294 582.368 336.793 580.176 336.793C578.032 336.793 576.174 337.294 574.602 338.294C573.029 339.247 571.814 340.653 570.957 342.511C570.147 344.322 569.741 346.561 569.741 349.23V356.663C569.741 359.283 570.147 361.523 570.957 363.381C571.814 365.239 573.029 366.669 574.602 367.669C576.174 368.622 578.032 369.099 580.176 369.099Z" fill="currentColor"/><path d="M486.787 377.892H463.059V369.244H469.491V336.652H463.059V328.004H486.787V336.652H480.355V369.244H486.787V377.892Z" fill="currentColor"/><path d="M350.828 377.892V328.004H369.625C374.057 328.004 377.916 328.933 381.204 330.791C384.492 332.65 387.041 335.437 388.852 339.154C390.662 342.823 391.568 347.421 391.568 352.948C391.568 358.475 390.662 363.097 388.852 366.814C387.041 370.482 384.492 373.246 381.204 375.104C377.916 376.963 374.057 377.892 369.625 377.892H350.828ZM361.692 368.243H369.625C371.77 368.243 373.628 367.838 375.2 367.028C376.773 366.218 377.964 364.979 378.774 363.311C379.632 361.596 380.06 359.428 380.06 356.807V349.088C380.06 346.42 379.632 344.252 378.774 342.584C377.964 340.917 376.773 339.678 375.2 338.868C373.628 338.058 371.77 337.653 369.625 337.653H361.692V368.243Z" fill="currentColor"/><path d="M236.59 328.004H247.168V358.594C247.168 360.929 247.454 362.883 248.025 364.455C248.645 365.98 249.622 367.147 250.956 367.957C252.29 368.719 254.029 369.101 256.173 369.101C258.318 369.101 260.033 368.719 261.319 367.957C262.654 367.147 263.63 365.98 264.25 364.455C264.869 362.883 265.179 360.929 265.179 358.594V328.004H275.757V357.451C275.757 362.358 275.114 366.385 273.827 369.529C272.541 372.674 270.468 375.009 267.609 376.534C264.75 378.011 260.938 378.749 256.173 378.749C251.408 378.749 247.597 378.011 244.738 376.534C241.879 375.009 239.806 372.674 238.52 369.529C237.233 366.385 236.59 362.358 236.59 357.451V328.004Z" fill="currentColor"/><path d="M165.119 337.653H151.61V377.892H140.747V337.653H127.238V328.004H165.119V337.653Z" fill="currentColor"/><path d="M39.6434 378.748C35.3074 378.748 31.5908 377.985 28.4936 376.461C25.4441 374.936 22.8473 373.006 20.7031 370.671L27.8504 363.453C29.5181 365.359 31.4002 366.788 33.4967 367.741C35.6409 368.694 37.928 369.17 40.3581 369.17C43.0264 369.17 45.0038 368.622 46.2903 367.527C47.5768 366.431 48.2201 364.977 48.2201 363.167C48.2201 362.261 48.0533 361.451 47.7198 360.737C47.4339 359.974 46.8621 359.355 46.0044 358.878C45.1944 358.354 44.0032 357.997 42.4308 357.806L37.4992 357.163C34.0208 356.687 31.1381 355.829 28.851 354.59C26.6115 353.303 24.9438 351.636 23.8479 349.587C22.752 347.49 22.204 345.06 22.204 342.297C22.204 339.295 22.9426 336.674 24.4197 334.435C25.9444 332.148 28.0886 330.361 30.8522 329.074C33.6635 327.788 37.0227 327.145 40.9299 327.145C44.6941 327.145 48.0057 327.764 50.8646 329.003C53.7235 330.194 56.1774 331.909 58.2262 334.149L51.0075 341.439C49.8163 340.057 48.363 338.938 46.6477 338.08C44.98 337.175 42.8596 336.722 40.2866 336.722C37.8565 336.722 36.0459 337.151 34.8547 338.008C33.6635 338.866 33.0679 340.057 33.0679 341.582C33.0679 342.726 33.2585 343.655 33.6397 344.369C34.0685 345.084 34.7118 345.632 35.5694 346.013C36.4747 346.394 37.6183 346.704 39.0001 346.942L43.9317 347.729C47.3624 348.253 50.1975 349.134 52.437 350.373C54.6764 351.612 56.3441 353.232 57.44 355.233C58.5359 357.234 59.0839 359.665 59.0839 362.523C59.0839 365.716 58.3215 368.527 56.7968 370.957C55.3197 373.387 53.1279 375.293 50.2213 376.675C47.3147 378.057 43.7888 378.748 39.6434 378.748Z" fill="currentColor"/></svg>
         </span>
         <p data-i18n="footer.description">Human Systems Architect: I design the relationship between people, technology and business, for teams that can't afford their product to be the problem.</p>
+        <a href="https://calendar.app.google/GWivwZbos5j8QxMU7" target="_blank" rel="noopener" class="btn-cta footer-cta"><svg class="bi" aria-hidden="true"><use href="#i-calendar-check"/></svg> <span data-i18n="cta.bookCall">Book a call</span></a>
       </div>
       <div class="footer-col">
         <h4 data-i18n="footer.navHeading">Navigation</h4>
-        <a href="#sobre-mi" data-i18n="nav.about">About</a>
-        <a href="#servicios" data-i18n="nav.services">Services</a>
         <a href="#portafolio" data-i18n="nav.portfolio">Portfolio</a>
         <a href="#experiencias" data-i18n="nav.experiences">Experiences</a>
+        <a href="#sobre-mi" data-i18n="nav.about">About</a>
+        <a href="#servicios" data-i18n="nav.services">Services</a>
         <a href="#proceso" data-i18n="nav.process">Process</a>
       </div>
       <div class="footer-col">
@@ -1370,14 +1351,11 @@ html.lenis, html.lenis body{ height:auto; }
         </div>
       </div>
     </div>
-    <a class="footer-statement reveal" id="footerStatement" href="https://calendar.app.google/GWivwZbos5j8QxMU7" target="_blank" rel="noopener">
-      <span class="footer-statement-text" id="footerStatementText" data-i18n="footer.statement">Let's fix the system.</span>
-      <span class="footer-statement-cta"><span data-i18n="cta.bookCall">Book a call</span> <svg class="bi" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></span>
-    </a>
     <div class="footer-bottom">
       <span data-i18n="footer.copyright">© <span id="year"></span> Juan Manuel Monroy Gómez. All rights reserved.</span>
-      <span class="footer-meta"><span class="live-dot" aria-hidden="true"></span><span data-i18n="footer.location">Guatemala City, Guatemala · Available remote</span><span aria-hidden="true">·</span><time class="footer-time" id="localTime"></time></span>
+      <span class="footer-meta"><span data-i18n="footer.location">Guatemala City, Guatemala · Available remote</span><span aria-hidden="true">·</span><time class="footer-time" id="localTime"></time></span>
     </div>
+    <p class="footer-credit"><a href="https://sketchfab.com/3d-models/tilt-brush-studio-space-346edb3982634d76ba37f6f63144bf0e" target="_blank" rel="noopener">3D by Joshua Eiten</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></p>
   </div>
 </footer>
 
@@ -1607,7 +1585,6 @@ html.lenis, html.lenis body{ height:auto; }
       "footer.socialHeading": "Redes",
       "footer.copyright": '© <span id="year"></span> Juan Manuel Monroy Gómez. Todos los derechos reservados.',
       "footer.location": "Guatemala City, Guatemala · Disponible en remoto",
-      "footer.statement": "Arreglemos el sistema.",
       "console.customTag": "COMPONENTE GENERADO",
       "console.inputLabel": "Nombre del componente",
       "console.inputPlaceholder": "Ej. Tarjeta de precios, Navbar, Modal…",
@@ -1731,7 +1708,6 @@ html.lenis, html.lenis body{ height:auto; }
       "footer.socialHeading": "Social",
       "footer.copyright": '© <span id="year"></span> Juan Manuel Monroy Gómez. All rights reserved.',
       "footer.location": "Guatemala City, Guatemala · Available remote",
-      "footer.statement": "Let's fix the system.",
       "console.customTag": "GENERATED COMPONENT",
       "console.inputLabel": "Component name",
       "console.inputPlaceholder": "E.g. Pricing card, Navbar, Modal…",
@@ -1871,76 +1847,6 @@ html.lenis, html.lenis body{ height:auto; }
         if (liveRegion) liveRegion.textContent = '';
       });
     }
-  })();
-
-  // =====================================================
-  // D. MANIFIESTO — frase con efecto de revelado al cursor
-  // =====================================================
-  (function(){
-    const lettersEl = document.getElementById('manifestoLetters');
-    const sourceEl = document.getElementById('manifestoSource');
-    if (!lettersEl || !sourceEl) return;
-
-    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const REST_BLUR = (!canHover || reducedMotion) ? 'none' : 'blur(5px)';
-    const REST_OPACITY = (!canHover || reducedMotion) ? '1' : '0.32';
-    let letters = [];
-
-    function build(){
-      const text = sourceEl.textContent;
-      const words = text.split(' ');
-      lettersEl.innerHTML = words.map(word => {
-        const letterSpans = word.split('').map(ch => '<span class="reveal-letter">' + ch + '</span>').join('');
-        return '<span class="reveal-word">' + letterSpans + '</span>';
-      }).join(' ');
-      letters = Array.from(lettersEl.querySelectorAll('.reveal-letter')).map(el => ({
-        el: el,
-        cx: el.offsetLeft + el.offsetWidth / 2,
-        cy: el.offsetTop + el.offsetHeight / 2
-      }));
-      letters.forEach(l => { l.el.style.filter = REST_BLUR; l.el.style.opacity = REST_OPACITY; });
-    }
-
-    function recalc(){
-      letters.forEach(l => {
-        l.cx = l.el.offsetLeft + l.el.offsetWidth / 2;
-        l.cy = l.el.offsetTop + l.el.offsetHeight / 2;
-      });
-    }
-
-    function onMove(e){
-      const rect = lettersEl.getBoundingClientRect();
-      const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-      const CLEAR_RADIUS = 150;  // dentro de este radio, cero blur, opacidad total
-      const FEATHER_RADIUS = 250; // fuera de este radio, vuelve al estado de reposo
-      letters.forEach(l => {
-        const dx = mx - l.cx, dy = my - l.cy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        let t;
-        if (dist <= CLEAR_RADIUS) {
-          t = 1;
-        } else if (dist >= FEATHER_RADIUS) {
-          t = 0;
-        } else {
-          t = 1 - (dist - CLEAR_RADIUS) / (FEATHER_RADIUS - CLEAR_RADIUS);
-        }
-        l.el.style.filter = t >= 1 ? 'none' : 'blur(' + ((1 - t) * 5).toFixed(2) + 'px)';
-        l.el.style.opacity = (0.32 + t * 0.68).toFixed(2);
-      });
-    }
-    function onLeave(){
-      letters.forEach(l => { l.el.style.filter = REST_BLUR; l.el.style.opacity = REST_OPACITY; });
-    }
-
-    build();
-    window.__rebuildManifesto = build;
-
-    if (canHover && !reducedMotion) {
-      lettersEl.addEventListener('mousemove', onMove);
-      lettersEl.addEventListener('mouseleave', onLeave);
-    }
-    window.addEventListener('resize', recalc);
   })();
 
   // =====================================================
@@ -2115,120 +2021,72 @@ html.lenis, html.lenis body{ height:auto; }
   })();
 
   // =====================================================
-  // E. ELEMENTO 3D DEL HERO — sistema de paneles flotantes
+  // E. HERO — "mi espacio": estudio 3D (Tilt Brush, CC BY 4.0)
+  // Se carga después de la página, solo en desktop. En móvil queda el póster.
   // =====================================================
   function initHero3D(){
     const stage = document.getElementById('hero3dStage');
-    if (!stage) return;
-    if (window.innerWidth < 992) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (typeof THREE === 'undefined') return;
+    if (!stage || !window.THREE || !THREE.GLTFLoader) return;
+    const w = stage.clientWidth, h = stage.clientHeight;
+    if (!w || !h) return;
 
-    let renderer, scene, camera, group;
-    let mouseX = 0, mouseY = 0, rotY = 0, rotX = 0;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setSize(w, h);
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
-    function buildScene(){
-      const w = stage.clientWidth, h = stage.clientHeight;
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 100);
-      camera.position.set(0, 0.35, 7);
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x08090A);
+    scene.fog = new THREE.Fog(0x08090A, 4.5, 11);
+    // Noche índigo afuera, luz cálida de lámparas adentro
+    scene.add(new THREE.HemisphereLight(0x8a93ff, 0x1a1408, 0.55));
+    const moon = new THREE.DirectionalLight(0x6c78ff, 0.35); moon.position.set(-4, 3, 4); scene.add(moon);
+    [[0.3, 2.5, -0.6, 1.4, 6], [1.7, 2.5, 0.3, 1.2, 6], [2.7, 1.5, -1.3, 0.9, 4], [0.6, 1.8, -2.6, 0.8, 4]].forEach(([x, y, z, i, d]) => {
+      const l = new THREE.PointLight(0xffb458, i, d, 2); l.position.set(x, y, z); scene.add(l);
+    });
 
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      renderer.setSize(w, h);
+    const camera = new THREE.PerspectiveCamera(64, w / h, 0.05, 60);
+    const BASE = new THREE.Vector3(0.9, 1.5, 2.2), LOOK = new THREE.Vector3(0.2, 1.3, -3), look = new THREE.Vector3();
+    let mx = 0, my = 0, ex = 0, ey = 0;
+
+    const loader = new THREE.GLTFLoader();
+    if (window.MeshoptDecoder) loader.setMeshoptDecoder(window.MeshoptDecoder);
+    loader.load('assets/3d/studio.glb', gltf => {
+      scene.add(gltf.scene);
       renderer.domElement.classList.add('gl-fade');
-      stage.appendChild(renderer.domElement);
+      stage.prepend(renderer.domElement);
+      place(performance.now() / 1000);
+      renderer.render(scene, camera);
       requestAnimationFrame(() => requestAnimationFrame(() => renderer.domElement.classList.add('is-ready')));
+      animate();
+    }, undefined, () => { /* si falla, queda el póster */ });
 
-      scene.add(new THREE.AmbientLight(0x8890ff, 0.6));
-      const key = new THREE.DirectionalLight(0xffffff, 0.85);
-      key.position.set(3, 4, 5);
-      scene.add(key);
-      const rim = new THREE.PointLight(0x5e6ad2, 1.2, 22);
-      rim.position.set(-4, -2, 3);
-      scene.add(rim);
-
-      group = new THREE.Group();
-      scene.add(group);
-
-      // Paneles planos = "componentes de interfaz" flotando en el espacio
-      const panelDefs = [
-        { w: 1.7, h: 1.05, x: -1.15, y: 0.55, z: 0.15, rz: -0.08 },
-        { w: 1.25, h: 1.6, x: 1.05, y: -0.35, z: -0.35, rz: 0.10 },
-        { w: 0.95, h: 0.65, x: -0.35, y: -1.05, z: 0.55, rz: 0.05 },
-        { w: 0.75, h: 0.75, x: 1.55, y: 1.15, z: 0.1, rz: -0.14 }
-      ];
-      const nodePositions = [];
-      panelDefs.forEach(def => {
-        const geo = new THREE.BoxGeometry(def.w, def.h, 0.035);
-        const mat = new THREE.MeshStandardMaterial({
-          color: 0x5e6ad2, transparent: true, opacity: 0.22,
-          roughness: 0.4, metalness: 0.05
-        });
-        const mesh = new THREE.Mesh(geo, mat);
-        mesh.position.set(def.x, def.y, def.z);
-        mesh.rotation.z = def.rz;
-        group.add(mesh);
-
-        const edges = new THREE.EdgesGeometry(geo);
-        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x9aa3ff, transparent: true, opacity: 0.8 }));
-        line.position.copy(mesh.position);
-        line.rotation.copy(mesh.rotation);
-        group.add(line);
-
-        nodePositions.push([def.x, def.y, def.z + 0.05]);
-      });
-
-      // Nodos pequeños en cada panel, como puntos de un sistema
-      const nodeGeo = new THREE.SphereGeometry(0.045, 16, 16);
-      const nodeMat = new THREE.MeshStandardMaterial({ color: 0x9aa3ff, emissive: 0x5e6ad2, emissiveIntensity: 0.6 });
-      nodePositions.forEach(p => {
-        const s = new THREE.Mesh(nodeGeo, nodeMat);
-        s.position.set(p[0], p[1], p[2]);
-        group.add(s);
-      });
-
-      // Líneas finas que conectan los nodos, sugiriendo un sistema de diseño
-      const lineMat = new THREE.LineBasicMaterial({ color: 0x5e6ad2, transparent: true, opacity: 0.32 });
-      for (let i = 0; i < nodePositions.length; i++) {
-        const a = nodePositions[i];
-        const b = nodePositions[(i + 1) % nodePositions.length];
-        const geo = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(a[0], a[1], a[2]),
-          new THREE.Vector3(b[0], b[1], b[2])
-        ]);
-        group.add(new THREE.Line(geo, lineMat));
-      }
+    function place(t){
+      ex += (mx - ex) * 0.035; ey += (my - ey) * 0.035;
+      camera.position.set(
+        BASE.x + ex * 0.28 + Math.sin(t * 0.11) * 0.12,
+        BASE.y - ey * 0.1 + Math.sin(t * 0.16) * 0.035,
+        BASE.z + Math.sin(t * 0.07) * 0.08
+      );
+      look.set(LOOK.x + ex * 0.45, LOOK.y - ey * 0.22, LOOK.z);
+      camera.lookAt(look);
     }
-
-    function onMouseMove(e){
-      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      mouseY = (e.clientY / window.innerHeight) * 2 - 1;
-    }
-    function onResize(){
-      if (window.innerWidth < 992 || !stage.clientWidth || !stage.clientHeight) return;
-      camera.aspect = stage.clientWidth / stage.clientHeight;
-      camera.updateProjectionMatrix();
+    window.addEventListener('mousemove', e => {
+      mx = (e.clientX / window.innerWidth) * 2 - 1;
+      my = (e.clientY / window.innerHeight) * 2 - 1;
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+      if (!stage.clientWidth || !stage.clientHeight) return;
+      camera.aspect = stage.clientWidth / stage.clientHeight; camera.updateProjectionMatrix();
       renderer.setSize(stage.clientWidth, stage.clientHeight);
-    }
+    });
     const gate = onScreen(stage);
     function animate(){
       requestAnimationFrame(animate);
       if (!gate.on) return;
-      rotY += (mouseX * 0.35 - rotY) * 0.03;
-      rotX += (mouseY * 0.18 - rotX) * 0.03;
-      group.rotation.y = rotY + performance.now() * 0.00007;
-      group.rotation.x = rotX;
+      place(performance.now() / 1000);
       renderer.render(scene, camera);
-    }
-
-    try {
-      buildScene();
-      window.addEventListener('mousemove', onMouseMove, { passive: true });
-      window.addEventListener('resize', onResize);
-      animate();
-    } catch (e) {
-      // Degradación silenciosa: si WebGL falla, el hero se ve bien sin el 3D
     }
   }
 
@@ -2663,9 +2521,15 @@ html.lenis, html.lenis body{ height:auto; }
     const idle = window.requestIdleCallback || (cb => setTimeout(cb, 250));
     function safe(fn){ return () => { try { fn(); } catch (e) {} }; }
 
+    function loadScript(src){
+      return new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src; s.async = true; s.onload = resolve; s.onerror = reject; document.head.appendChild(s); });
+    }
+    const saveData = navigator.connection && navigator.connection.saveData;
     // Hero (solo desktop): después de que la página terminó de cargar
-    if (window.innerWidth >= 992 && document.getElementById('hero3dStage')) {
-      const start = () => idle(() => loadThree().then(safe(initHero3D)).catch(() => {}));
+    if (window.innerWidth >= 992 && !saveData && document.getElementById('hero3dStage')) {
+      const start = () => idle(() => loadThree()
+        .then(() => Promise.all([loadScript('assets/vendor/GLTFLoader.js'), loadScript('assets/vendor/meshopt_decoder.js')]))
+        .then(safe(initHero3D)).catch(() => {}));
       if (document.readyState === 'complete') start(); else window.addEventListener('load', start, { once: true });
     }
     // Máquina de ideas: cuando "Sobre mí" se acerca al viewport
@@ -2784,29 +2648,14 @@ html.lenis, html.lenis body{ height:auto; }
   })();
 
   // =====================================================
-  // M. FOOTER — frase grande ajustada al ancho + luz que sigue al cursor
+  // M. TEXTO CON LUZ — la frase de "How I think" se ilumina bajo el cursor
   // =====================================================
   (function(){
-    const link = document.getElementById('footerStatement');
-    const text = document.getElementById('footerStatementText');
-    if (!link || !text) return;
-
-    // Ajusta el tamaño para que la frase llene exactamente el ancho disponible
-    function fit(){
-      if (window.innerWidth < 576) { text.style.fontSize = ''; return; }
-      text.style.fontSize = '100px';
-      const avail = link.clientWidth;
-      const natural = text.scrollWidth;
-      if (natural > 0) text.style.fontSize = Math.min(100 * avail / natural, 210).toFixed(2) + 'px';
-    }
-    fit();
-    window.addEventListener('resize', fit);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-    window.__fitFooter = fit;
-
-    if (FINE_POINTER && !REDUCED_MOTION) {
+    if (!FINE_POINTER || REDUCED_MOTION) return;
+    document.querySelectorAll('[data-spotlight]').forEach(text => {
+      const host = text.closest('section') || text;
       let raf = 0, mx = 0, my = 0;
-      link.addEventListener('pointermove', e => {
+      host.addEventListener('pointermove', e => {
         const r = text.getBoundingClientRect();
         mx = e.clientX - r.left; my = e.clientY - r.top;
         if (!raf) raf = requestAnimationFrame(() => {
@@ -2815,9 +2664,9 @@ html.lenis, html.lenis body{ height:auto; }
           text.style.setProperty('--my', my + 'px');
         });
       });
-      link.addEventListener('pointerenter', () => link.classList.add('is-lit'));
-      link.addEventListener('pointerleave', () => link.classList.remove('is-lit'));
-    }
+      host.addEventListener('pointerenter', () => text.classList.add('is-lit'));
+      host.addEventListener('pointerleave', () => text.classList.remove('is-lit'));
+    });
   })();
 
   // =====================================================
@@ -3008,7 +2857,6 @@ void main(){
   })();
   window.__afterLang = function(){
     if (window.__navRefresh) window.__navRefresh();
-    if (window.__fitFooter) window.__fitFooter();
     if (window.__tickClock) window.__tickClock();
     if (window.__processMeasure) window.__processMeasure();
   };
