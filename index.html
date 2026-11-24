@@ -468,6 +468,54 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 /* =====================================================
+   EXPERIENCIAS DIGITALES — tarjetas con video (3D / BTL interactivo)
+   ===================================================== */
+.exp-video-wrap{ width:100%; aspect-ratio:16/10; overflow:hidden; background:var(--bg-raised); position:relative; }
+.exp-video-wrap video{ width:100%; height:100%; object-fit:cover; display:block; }
+.exp-badge{
+  position:absolute; top:0.7rem; left:0.7rem; z-index:2;
+  font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.04em; text-transform:uppercase;
+  color:#fff; background:rgba(10,10,16,0.65); border:1px solid rgba(255,255,255,0.15);
+  border-radius:5px; padding:0.22rem 0.5rem; backdrop-filter:blur(4px);
+}
+.exp-trio{ display:grid; grid-template-columns:1fr; gap:0.6rem; padding:0.9rem; }
+.exp-trio-item{ position:relative; border-radius:8px; overflow:hidden; border:1px solid var(--border); background:var(--bg-raised); }
+.exp-trio-item video{ width:100%; aspect-ratio:16/9; object-fit:cover; display:block; }
+.exp-trio-label{
+  position:absolute; bottom:0; left:0; right:0; padding:0.4rem 0.6rem;
+  font-family:var(--font-mono); font-size:0.66rem; color:#fff; letter-spacing:0.02em;
+  background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+}
+.case-ds-row{ margin-top:0.85rem; }
+.case-ds-btn{
+  display:inline-flex; align-items:center; gap:0.4rem; font-family:var(--font-mono); font-size:0.72rem;
+  color:var(--indigo-bright); background:none; border:1px solid var(--border); border-radius:6px;
+  padding:0.4rem 0.7rem; cursor:pointer; transition:border-color 0.2s ease, background 0.2s ease;
+}
+.case-ds-btn:hover{ border-color:rgba(130,143,255,0.5); background:rgba(130,143,255,0.08); }
+
+/* =====================================================
+   DESIGN SYSTEM MODAL — vista previa embebida (iframe)
+   ===================================================== */
+.ds-overlay{
+  position:fixed; inset:0; z-index:3100; background:rgba(4,4,8,0.92);
+  display:none; align-items:center; justify-content:center; padding:1.5rem;
+}
+.ds-overlay.is-open{ display:flex; }
+.ds-modal{ position:relative; width:100%; height:100%; max-width:1400px; display:flex; flex-direction:column; }
+.ds-modal-head{ display:flex; align-items:center; justify-content:space-between; padding-bottom:0.7rem; color:var(--text-soft); font-family:var(--font-mono); font-size:0.75rem; }
+.ds-close{
+  background:none; border:1px solid var(--border); color:var(--text); border-radius:6px;
+  width:34px; height:34px; font-size:1.1rem; line-height:1; cursor:pointer;
+}
+.ds-close:hover{ border-color:rgba(130,143,255,0.5); color:var(--indigo-bright); }
+.ds-modal iframe{ flex:1; width:100%; border:1px solid var(--border); border-radius:var(--radius-md); background:#fff; }
+@media(max-width:700px){
+  .ds-overlay{ padding:0; }
+  .ds-modal{ max-width:100%; }
+}
+
+/* =====================================================
    LIGHTBOX — galería de imágenes de proyecto
    ===================================================== */
 .lightbox-overlay{
@@ -728,6 +776,7 @@ body{ overflow-x:hidden; }
       <a href="#sobre-mi" data-i18n="nav.about">About</a>
       <a href="#servicios" data-i18n="nav.services">Services</a>
       <a href="#portafolio" data-i18n="nav.portfolio">Portfolio</a>
+      <a href="#experiencias" data-i18n="nav.experiences">Experiences</a>
       <a href="#proceso" data-i18n="nav.process">Process</a>
       <div class="lang-switch" role="group" aria-label="Selector de idioma / Language selector">
         <button type="button" id="langEs" aria-pressed="false" data-lang="es">ES</button>
@@ -753,7 +802,7 @@ body{ overflow-x:hidden; }
     <div class="hero-grid">
       <div>
         <span class="eyebrow on-dark" data-i18n="hero.eyebrow">UX Strategy · Product Design · AI</span>
-        <h1 data-i18n="hero.title">Your product doesn't have a design problem. It has a <em>system</em> problem.</h1>
+        <h1 data-i18n="hero.title">Your product doesn't have a design problem. It has a <em>system</em> quietly costing you money.</h1>
         <p class="lead-text" data-i18n="hero.lead">I find the exact point where your product's complexity is costing you adoption, sales, or team speed.</p>
         <div class="hero-ctas">
           <a href="https://calendar.app.google/GWivwZbos5j8QxMU7" target="_blank" rel="noopener" class="btn-cta"><i class="bi bi-calendar-check" aria-hidden="true"></i> <span data-i18n="hero.ctaPrimary">Book a call</span></a>
@@ -954,6 +1003,10 @@ body{ overflow-x:hidden; }
             <h3 style="font-size:1.05rem;" data-i18n="portfolio.c1title">From native desktop app to a web ERP used by 2,500 stores</h3>
             <p class="case-body-text" data-i18n="portfolio.c1desc">AIMS360 was losing adoption because its desktop interface couldn't grow with the business. I redesigned the system end to end and laid the groundwork for a web ERP now used by 2,500 stores, without losing users who'd spent years running the previous version.</p>
             <div class="case-meta"><span>Figma</span><span>Claude Code</span><span>Design System</span></div>
+            <div class="case-ds-row">
+              <button type="button" class="case-ds-btn" id="openDesignSystem"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> <span data-i18n="portfolio.c1dsBtn">View the design system</span></button>
+              <p style="margin:0.5rem 0 0; font-size:0.78rem; color:var(--text-faint);" data-i18n="portfolio.c1dsNote">Built token-by-token with the engineering team, so design and code never drift apart.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -1002,6 +1055,75 @@ body{ overflow-x:hidden; }
     </div>
   </div>
 </section>
+
+<!-- =====================================================
+     EXPERIENCIAS DIGITALES — 3D interactivo / activaciones BTL
+===================================================== -->
+<section class="section-pad" id="experiencias">
+  <div class="container-xl-custom">
+    <div class="section-head mx-auto reveal">
+      <span class="eyebrow" data-i18n="experiences.eyebrow">Digital experiences</span>
+      <h2 data-i18n="experiences.title">When the product is the interaction itself</h2>
+      <p data-i18n="experiences.subtitle">Interactive 3D and BTL builds where people don't read the product — they play with it.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 reveal reveal-delay-1">
+        <div class="case-card">
+          <div class="exp-video-wrap">
+            <span class="exp-badge" data-i18n="experiences.avatrBadge">Interactive 3D</span>
+            <video src="assets/experiences/avatr-3d-loop.mp4" poster="assets/experiences/avatr-3d-poster.jpg" autoplay muted loop playsinline aria-label="AVATR 3D configurator demo"></video>
+          </div>
+          <div class="case-body">
+            <div class="case-top"><span class="case-id">EXP&nbsp;·&nbsp;01</span><span class="case-dot dot-indigo" aria-hidden="true"></span></div>
+            <span class="case-project">AVATR</span>
+            <span class="case-tag" data-i18n="experiences.avatrTag">Automotive · 3D configurator</span>
+            <h3 style="font-size:1.05rem;" data-i18n="experiences.avatrTitle">A car you can walk around before it exists in the showroom</h3>
+            <p class="case-body-text" data-i18n="experiences.avatrDesc">A dealership can't put every color and scene in front of a buyer. I built a real-time 3D configurator — drag to rotate, switch environments and time of day — so the decision to visit happens before the visit.</p>
+            <div class="case-meta"><span>Three.js</span><span>WebGL</span><span>3D</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 reveal reveal-delay-2">
+        <div class="case-card">
+          <div class="exp-trio">
+            <div class="exp-trio-item">
+              <video src="assets/experiences/walmart-ruleta.mp4" poster="assets/experiences/walmart-ruleta-poster.jpg" autoplay muted loop playsinline aria-label="Walmart roulette activation demo"></video>
+              <span class="exp-trio-label" data-i18n="experiences.btlRuleta">Walmart — prize wheel</span>
+            </div>
+            <div class="exp-trio-item">
+              <video src="assets/experiences/walmart-sobres.mp4" poster="assets/experiences/walmart-sobres-poster.jpg" autoplay muted loop playsinline aria-label="Walmart surprise envelopes activation demo"></video>
+              <span class="exp-trio-label" data-i18n="experiences.btlSobres">Walmart — surprise envelopes</span>
+            </div>
+            <div class="exp-trio-item">
+              <video src="assets/experiences/paiz-tragamonedas.mp4" poster="assets/experiences/paiz-tragamonedas-poster.jpg" autoplay muted loop playsinline aria-label="Paiz slot machine activation demo"></video>
+              <span class="exp-trio-label" data-i18n="experiences.btlTraga">Paiz — slot machine</span>
+            </div>
+          </div>
+          <div class="case-body">
+            <div class="case-top"><span class="case-id">EXP&nbsp;·&nbsp;02</span><span class="case-dot dot-teal" aria-hidden="true"></span></div>
+            <span class="case-project">Walmart &amp; Paiz</span>
+            <span class="case-tag" data-i18n="experiences.btlTag">Retail · BTL activations</span>
+            <h3 style="font-size:1.05rem;" data-i18n="experiences.btlTitle">Touch-screen games that move real inventory on the sales floor</h3>
+            <p class="case-body-text" data-i18n="experiences.btlDesc">Three in-store touch activations for Walmart and Paiz, each tied to a different promotion. The games aren't decoration — every spin and every envelope is wired to a live prize inventory the store team controls.</p>
+            <div class="case-meta"><span>HTML5</span><span>Canvas</span><span>Touch UI</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ds-overlay" id="dsOverlay">
+  <div class="ds-modal" role="dialog" aria-modal="true" aria-labelledby="dsModalTitle">
+    <div class="ds-modal-head">
+      <span id="dsModalTitle" data-i18n="ds.modalTitle">AIMS360 — Design System</span>
+      <button type="button" class="ds-close" id="dsClose" aria-label="Close" data-i18n-aria="ds.close">&times;</button>
+    </div>
+    <iframe id="dsFrame" src="" title="AIMS360 Design System" loading="lazy"></iframe>
+  </div>
+</div>
 
 <!-- =====================================================
      PROCESO
@@ -1084,6 +1206,7 @@ body{ overflow-x:hidden; }
         <a href="#sobre-mi" data-i18n="nav.about">About</a>
         <a href="#servicios" data-i18n="nav.services">Services</a>
         <a href="#portafolio" data-i18n="nav.portfolio">Portfolio</a>
+        <a href="#experiencias" data-i18n="nav.experiences">Experiences</a>
         <a href="#proceso" data-i18n="nav.process">Process</a>
       </div>
       <div class="footer-col">
@@ -1224,7 +1347,7 @@ body{ overflow-x:hidden; }
       "nav.process": "Proceso",
       "nav.cta": "Agendar llamada",
       "hero.eyebrow": "Estrategia UX · Diseño de producto · IA",
-      "hero.title": 'Tu producto no tiene un problema de diseño. Tiene un problema de <em>sistema</em>.',
+      "hero.title": 'Tu producto no tiene un problema de diseño. Tiene un <em>sistema</em> que te está costando dinero en silencio.',
       "hero.lead": "Encuentro el punto exacto donde la complejidad de tu producto te está costando adopción, ventas o velocidad de equipo.",
       "hero.ctaPrimary": "Agendar una llamada",
       "hero.ctaSecondary": "Ver casos de estudio",
@@ -1270,6 +1393,24 @@ body{ overflow-x:hidden; }
       "portfolio.c3tag": "Fintech · Plataformas internas",
       "portfolio.c3title": "Orden en un ecosistema de herramientas internas",
       "portfolio.c3desc": "Miles de empleados de uno de los bancos más grandes de Guatemala dependían de herramientas internas que no hablaban entre sí. Entré a poner coherencia al ecosistema, reduciendo el tiempo que el equipo pierde reaprendiendo interfaces distintas para tareas iguales.",
+      "portfolio.c1dsBtn": "Ver el design system",
+      "portfolio.c1dsNote": "Construido token por token junto al equipo de ingeniería, para que diseño y código nunca se desalineen.",
+      "nav.experiences": "Experiencias",
+      "experiences.eyebrow": "Experiencias digitales",
+      "experiences.title": "Cuando el producto es la interacción misma",
+      "experiences.subtitle": "Builds 3D interactivos y activaciones BTL donde la gente no lee el producto — juega con él.",
+      "experiences.avatrBadge": "3D interactivo",
+      "experiences.avatrTag": "Automotriz · Configurador 3D",
+      "experiences.avatrTitle": "Un auto que puedes recorrer antes de que exista en el showroom",
+      "experiences.avatrDesc": "Un concesionario no puede poner cada color y escenario frente a un comprador. Construí un configurador 3D en tiempo real — arrastra para girar, cambia de entorno y hora del día — para que la decisión de visitar la agencia ocurra antes de la visita.",
+      "experiences.btlTag": "Retail · Activaciones BTL",
+      "experiences.btlTitle": "Juegos touch-screen que mueven inventario real en el piso de venta",
+      "experiences.btlDesc": "Tres activaciones touch en punto de venta para Walmart y Paiz, cada una ligada a una promoción distinta. Los juegos no son decoración — cada giro y cada sobre está conectado a un inventario de premios real que controla el equipo de tienda.",
+      "experiences.btlRuleta": "Walmart — ruleta de premios",
+      "experiences.btlSobres": "Walmart — sobres sorpresa",
+      "experiences.btlTraga": "Paiz — tragamonedas",
+      "ds.modalTitle": "AIMS360 — Design System",
+      "ds.close": "Cerrar",
       "process.eyebrow": "Proceso",
       "process.title": "Así es trabajar conmigo",
       "process.subtitle": "Cinco pasos, en ese orden, en cada proyecto — desde el primer brief hasta la validación final.",
@@ -1329,7 +1470,7 @@ body{ overflow-x:hidden; }
       "nav.process": "Process",
       "nav.cta": "Book a call",
       "hero.eyebrow": "UX Strategy · Product Design · AI",
-      "hero.title": 'Your product doesn\'t have a design problem. It has a <em>system</em> problem.',
+      "hero.title": 'Your product doesn\'t have a design problem. It has a <em>system</em> quietly costing you money.',
       "hero.lead": "I find the exact point where your product's complexity is costing you adoption, sales, or team speed.",
       "hero.ctaPrimary": "Book a call",
       "hero.ctaSecondary": "See case studies",
@@ -1375,6 +1516,24 @@ body{ overflow-x:hidden; }
       "portfolio.c3tag": "Fintech · Internal platforms",
       "portfolio.c3title": "Order across an ecosystem of internal tools",
       "portfolio.c3desc": "Thousands of employees at one of Guatemala's largest banks depended on internal tools that didn't talk to each other. I stepped in to bring coherence to the ecosystem, cutting the time the team lost relearning different interfaces for the same tasks.",
+      "portfolio.c1dsBtn": "View the design system",
+      "portfolio.c1dsNote": "Built token-by-token with the engineering team, so design and code never drift apart.",
+      "nav.experiences": "Experiences",
+      "experiences.eyebrow": "Digital experiences",
+      "experiences.title": "When the product is the interaction itself",
+      "experiences.subtitle": "Interactive 3D and BTL builds where people don't read the product — they play with it.",
+      "experiences.avatrBadge": "Interactive 3D",
+      "experiences.avatrTag": "Automotive · 3D configurator",
+      "experiences.avatrTitle": "A car you can walk around before it exists in the showroom",
+      "experiences.avatrDesc": "A dealership can't put every color and scene in front of a buyer. I built a real-time 3D configurator — drag to rotate, switch environments and time of day — so the decision to visit happens before the visit.",
+      "experiences.btlTag": "Retail · BTL activations",
+      "experiences.btlTitle": "Touch-screen games that move real inventory on the sales floor",
+      "experiences.btlDesc": "Three in-store touch activations for Walmart and Paiz, each tied to a different promotion. The games aren't decoration — every spin and every envelope is wired to a live prize inventory the store team controls.",
+      "experiences.btlRuleta": "Walmart — prize wheel",
+      "experiences.btlSobres": "Walmart — surprise envelopes",
+      "experiences.btlTraga": "Paiz — slot machine",
+      "ds.modalTitle": "AIMS360 — Design System",
+      "ds.close": "Close",
       "process.eyebrow": "Process",
       "process.title": "This is what it's like to work with me",
       "process.subtitle": "Five steps, in that order, on every project — from the first brief to final validation.",
@@ -2180,6 +2339,34 @@ body{ overflow-x:hidden; }
     }
     window.__rebuildIdeaMachine = start;
     start();
+  })();
+
+  // =====================================================
+  // F2. DESIGN SYSTEM MODAL — iframe embebido, carga diferida
+  // =====================================================
+  (function(){
+    const dsOverlay = document.getElementById('dsOverlay');
+    const dsOpenBtn = document.getElementById('openDesignSystem');
+    const dsClose = document.getElementById('dsClose');
+    const dsFrame = document.getElementById('dsFrame');
+    if (!dsOverlay || !dsOpenBtn || !dsFrame) return;
+    const DS_SRC = 'aims360-design-system.html';
+
+    function openDs(){
+      if (!dsFrame.src) dsFrame.src = DS_SRC;
+      dsOverlay.classList.add('is-open');
+      document.documentElement.style.overflow = 'hidden';
+      dsClose.focus();
+    }
+    function closeDs(){
+      dsOverlay.classList.remove('is-open');
+      document.documentElement.style.overflow = '';
+      dsOpenBtn.focus();
+    }
+    dsOpenBtn.addEventListener('click', openDs);
+    dsClose.addEventListener('click', closeDs);
+    dsOverlay.addEventListener('click', e => { if (e.target === dsOverlay) closeDs(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && dsOverlay.classList.contains('is-open')) closeDs(); });
   })();
 
   // =====================================================
