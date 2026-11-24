@@ -829,6 +829,65 @@ canvas.gl-fade.is-ready{ opacity:1; }
   .live-dot{ animation:none; }
   .nav-indicator, .nav-progress span{ transition:none; }
 }
+
+/* =====================================================
+   SMOOTH SCROLL (Lenis)
+   ===================================================== */
+html.lenis, html.lenis body{ height:auto; }
+.lenis.lenis-smooth{ scroll-behavior:auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent]{ overscroll-behavior:contain; }
+.lenis.lenis-stopped{ overflow:hidden; }
+
+/* =====================================================
+   PROCESO — scroll horizontal fijo (solo desktop, lo activa JS)
+   ===================================================== */
+.process-section.is-pinned{ padding:0; overflow:clip; }
+.process-section.is-pinned > .container-xl-custom{
+  position:sticky; top:0; height:100vh; height:100svh;
+  display:flex; flex-direction:column; justify-content:center;
+  padding-top:64px; /* altura del navbar */
+}
+.process-section.is-pinned .section-head{ margin-bottom:2.2rem; }
+.process-section.is-pinned .process-steps{
+  display:flex; gap:1.5rem; width:max-content; will-change:transform;
+}
+.process-section.is-pinned .process-steps::before{ display:none; }
+.process-section.is-pinned .process-step{
+  width:min(380px, 32vw); flex:none; min-height:250px;
+  padding:1.75rem 1.6rem; border-radius:var(--radius-lg);
+  background:var(--surface); border:1px solid var(--border);
+  opacity:0.45; transform:scale(0.97);
+  transition:opacity 0.45s ease, transform 0.45s ease, border-color 0.45s ease, background 0.45s ease;
+}
+.process-section.is-pinned .process-step.is-current{
+  opacity:1; transform:scale(1);
+  border-color:rgba(130,143,255,0.38); background:rgba(94,106,210,0.07);
+}
+.process-section.is-pinned .process-step.is-past{ opacity:0.7; transform:scale(0.985); }
+.process-section.is-pinned .process-step.is-current .process-num{
+  border-color:var(--indigo-bright); color:#fff; background:var(--indigo);
+  box-shadow:0 0 22px var(--indigo-glow);
+}
+.process-section.is-pinned .process-num{ transition:background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, color 0.4s ease; }
+.process-section.is-pinned .process-step h3{ font-size:1.15rem; margin-top:0.4rem; }
+.process-section.is-pinned .process-step p{ font-size:0.92rem; line-height:1.6; }
+.process-meter-row{ display:flex; align-items:center; gap:1rem; margin-top:2.2rem; }
+.process-meter{ flex:1; height:2px; background:var(--border); border-radius:2px; overflow:hidden; }
+.process-meter span{
+  display:block; height:100%; width:100%; transform-origin:0 50%; transform:scaleX(0);
+  background:linear-gradient(90deg, var(--indigo), var(--indigo-bright));
+}
+.process-count{ font-family:var(--font-mono); font-size:0.75rem; color:var(--text-faint); letter-spacing:0.04em; font-variant-numeric:tabular-nums; }
+.process-count b{ color:var(--text); font-weight:500; }
+
+/* =====================================================
+   CTA FINAL — shader animado (WebGL, sin librerías)
+   ===================================================== */
+.cta-shader{
+  position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none;
+  opacity:0; transition:opacity 1.2s ease;
+}
+.cta-shader.is-ready{ opacity:1; }
 </style>
 </head>
 <body>
@@ -855,7 +914,7 @@ canvas.gl-fade.is-ready{ opacity:1; }
       </span>
     </a>
 
-    <nav class="nav-links" id="navLinks" aria-label="Navigation principal">
+    <nav class="nav-links" id="navLinks" aria-label="Navigation principal" data-lenis-prevent>
       <span class="nav-indicator" id="navIndicator" aria-hidden="true"></span>
       <a href="#sobre-mi" data-i18n="nav.about">About</a>
       <a href="#servicios" data-i18n="nav.services">Services</a>
@@ -1200,7 +1259,7 @@ canvas.gl-fade.is-ready{ opacity:1; }
   </div>
 </section>
 
-<div class="ds-overlay" id="dsOverlay">
+<div class="ds-overlay" id="dsOverlay" data-lenis-prevent>
   <div class="ds-modal" role="dialog" aria-modal="true" aria-labelledby="dsModalTitle">
     <div class="ds-modal-head">
       <span id="dsModalTitle" data-i18n="ds.modalTitle">AIMS360 — Design System</span>
@@ -1257,6 +1316,7 @@ canvas.gl-fade.is-ready{ opacity:1; }
 <section class="section-pad" id="contacto">
   <div class="container-xl-custom">
     <div class="final-cta reveal">
+      <canvas class="cta-shader" id="ctaShader" aria-hidden="true"></canvas>
       <div class="particle-field" data-particles aria-hidden="true"></div>
       <div style="position:relative; z-index:1;">
         <span class="eyebrow on-dark" style="justify-content:center;" data-i18n="cta.eyebrow">Let's start</span>
@@ -1324,7 +1384,7 @@ canvas.gl-fade.is-ready{ opacity:1; }
 <!-- =====================================================
      EASTER EGG — homenaje jugable a Fearless Crabs / Mayan Pitz
 ===================================================== -->
-<div class="crab-overlay" id="crabOverlay">
+<div class="crab-overlay" id="crabOverlay" data-lenis-prevent>
   <div class="crab-modal" role="dialog" aria-modal="true" aria-labelledby="crabModalTitle">
     <button type="button" class="crab-modal-close" id="crabModalClose" data-i18n-aria="easter.closeLabel" aria-label="Close game">&times;</button>
     <h3 id="crabModalTitle" data-i18n="easter.title">A nod to Fearless Crabs 🦀</h3>
@@ -1368,7 +1428,7 @@ canvas.gl-fade.is-ready{ opacity:1; }
 <!-- =====================================================
      LIGHTBOX — galería de imágenes de proyecto
 ===================================================== -->
-<div class="lightbox-overlay" id="lightboxOverlay">
+<div class="lightbox-overlay" id="lightboxOverlay" data-lenis-prevent>
   <div class="lightbox-modal" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption">
     <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Cerrar galería">&times;</button>
     <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Imagen anterior"><svg class="bi" aria-hidden="true"><use href="#i-chevron-left"/></svg></button>
@@ -1382,6 +1442,7 @@ canvas.gl-fade.is-ready{ opacity:1; }
     </div>
   </div>
 </div>
+<script src="assets/vendor/lenis.min.js"></script>
 <script>
   // ============ Año dinámico ============
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -2779,10 +2840,177 @@ canvas.gl-fade.is-ready{ opacity:1; }
     window.__tickClock = tick;
   })();
 
+
+  // =====================================================
+  // O. SMOOTH SCROLL — Lenis (rueda/trackpad; el touch queda nativo)
+  // =====================================================
+  (function(){
+    if (REDUCED_MOTION || typeof window.Lenis !== 'function') return;
+    const lenis = new window.Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1 });
+    window.__lenis = lenis;
+    (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
+
+    // Anclas internas con el mismo desplazamiento suave
+    document.querySelectorAll('a[href^="#"]:not(.skip-link)').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href');
+        if (id.length < 2) return;
+        const target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        lenis.scrollTo(target, { offset: 0, duration: 1.2 });
+        if (history.replaceState) history.replaceState(null, '', id);
+      });
+    });
+
+    // Los modales bloquean el scroll de fondo mientras están abiertos
+    const overlays = ['dsOverlay', 'crabOverlay', 'lightboxOverlay'].map(id => document.getElementById(id)).filter(Boolean);
+    const sync = () => { overlays.some(o => o.classList.contains('is-open')) ? lenis.stop() : lenis.start(); };
+    const mo = new MutationObserver(sync);
+    overlays.forEach(o => mo.observe(o, { attributes: true, attributeFilter: ['class'] }));
+  })();
+
+  // =====================================================
+  // P. PROCESO — scroll horizontal fijo (desktop)
+  // =====================================================
+  (function(){
+    const section = document.getElementById('proceso');
+    if (!section) return;
+    const container = section.querySelector('.container-xl-custom');
+    const track = section.querySelector('.process-steps');
+    const steps = Array.from(track.querySelectorAll('.process-step'));
+    const field = section.querySelector('.particle-field');
+    const canPin = () => window.innerWidth >= 992 && window.innerHeight >= 620 && !REDUCED_MOTION && CSS.supports('overflow', 'clip');
+    let pinned = false, distance = 0, meterFill = null, countEl = null, ticking = false, lastCurrent = -1;
+
+    function build(){
+      const row = document.createElement('div');
+      row.className = 'process-meter-row'; row.setAttribute('aria-hidden', 'true');
+      row.innerHTML = '<div class="process-meter"><span></span></div><span class="process-count"><b>01</b> / ' + String(steps.length).padStart(2, '0') + '</span>';
+      container.appendChild(row);
+      meterFill = row.querySelector('.process-meter span');
+      countEl = row.querySelector('.process-count b');
+    }
+    function measure(){
+      const want = canPin();
+      if (want !== pinned) {
+        pinned = want;
+        section.classList.toggle('is-pinned', pinned);
+        if (pinned) {
+          if (!meterFill) build();
+          steps.forEach(s => s.classList.add('is-visible'));
+          if (field) container.prepend(field);       // las partículas viajan con la vista fija
+        } else {
+          if (field) section.prepend(field);
+          section.style.height = ''; track.style.transform = '';
+          steps.forEach(s => s.classList.remove('is-current', 'is-past'));
+        }
+        if (meterFill) meterFill.parentNode.parentNode.style.display = pinned ? '' : 'none';
+        window.dispatchEvent(new Event('resize'));   // recalcula partículas y navbar
+      }
+      if (!pinned) return;
+      distance = Math.max(0, track.scrollWidth - container.clientWidth + parseFloat(getComputedStyle(container).paddingLeft) * 2);
+      section.style.height = (window.innerHeight + distance * 1.35) + 'px';
+      update();
+    }
+    function update(){
+      ticking = false;
+      if (!pinned) return;
+      const r = section.getBoundingClientRect();
+      const span = r.height - window.innerHeight;
+      const p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
+      track.style.transform = 'translate3d(' + (-p * distance).toFixed(1) + 'px,0,0)';
+      if (meterFill) meterFill.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+      const cur = Math.min(steps.length - 1, Math.round(p * (steps.length - 1)));
+      if (cur !== lastCurrent) {
+        lastCurrent = cur;
+        steps.forEach((s, i) => { s.classList.toggle('is-current', i === cur); s.classList.toggle('is-past', i < cur); });
+        if (countEl) countEl.textContent = String(cur + 1).padStart(2, '0');
+      }
+    }
+    window.addEventListener('scroll', () => { if (pinned && !ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(measure, 120); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    measure();
+    window.__processMeasure = measure;
+  })();
+
+  // =====================================================
+  // Q. CTA FINAL — shader de seda/aurora en WebGL puro
+  // =====================================================
+  (function(){
+    const canvas = document.getElementById('ctaShader');
+    if (!canvas) return;
+    const gl = canvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: false, powerPreference: 'low-power' });
+    if (!gl) return;
+    const VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+    const FS = `precision mediump float;
+uniform vec2 r;uniform float t;uniform vec2 m;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+  return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<3;i++){v+=a*n(p);p=p*2.03+vec2(17.,9.);a*=.5;}return v;}
+void main(){
+  vec2 uv=gl_FragCoord.xy/r;vec2 p=(gl_FragCoord.xy-.5*r)/r.y;
+  float T=t*.06;
+  vec2 q=vec2(fbm(p*1.4+vec2(T,-T*.7)),fbm(p*1.4+vec2(-T*.8,T)+3.1));
+  float w=fbm(p*.8+q*1.3+vec2(T*.5,0.))*1.25;
+  // hilos de seda: bandas finas deformadas por el ruido
+  float band=p.y*4.2+w*3.+sin(p.x*1.3+T*3.)*.5;
+  float lines=pow(abs(sin(band*3.1415)),18.);
+  float glow=smoothstep(.28,.85,w);
+  vec3 indigo=vec3(.369,.416,.824),bright=vec3(.51,.56,1.),teal=vec3(.333,.84,.745);
+  vec3 col=indigo*glow*.75+bright*lines*.55*(.3+glow)+teal*pow(glow,3.)*.18;
+  // luz suave que sigue al cursor
+  float md=length((uv-m)*vec2(r.x/r.y,1.));col+=bright*.22*exp(-md*md*5.);
+  // el centro queda más tranquilo para que el texto se lea
+  float c=length((uv-vec2(.5,.52))*vec2(1.1,1.6));
+  float a=clamp((glow*.7+lines*.6)*smoothstep(.12,.7,c),0.,1.)*.85;
+  gl_FragColor=vec4(col,a);
+}`;
+    function sh(type, src){ const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; }
+    const vs = sh(gl.VERTEX_SHADER, VS), fs = sh(gl.FRAGMENT_SHADER, FS);
+    if (!vs || !fs) return;
+    const prog = gl.createProgram(); gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+    gl.useProgram(prog);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const uR = gl.getUniformLocation(prog, 'r'), uT = gl.getUniformLocation(prog, 't'), uM = gl.getUniformLocation(prog, 'm');
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    const SCALE = 0.5;               // media resolución: se ve igual de suave y cuesta 4 veces menos
+    let mx = 0.5, my = 0.5, tmx = 0.5, tmy = 0.5;
+    function resize(){
+      const w = Math.max(1, Math.round(canvas.clientWidth * SCALE)), h = Math.max(1, Math.round(canvas.clientHeight * SCALE));
+      if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); }
+    }
+    function draw(t){
+      resize();
+      mx += (tmx - mx) * 0.06; my += (tmy - my) * 0.06;
+      gl.uniform2f(uR, canvas.width, canvas.height); gl.uniform1f(uT, t / 1000); gl.uniform2f(uM, mx, my);
+      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    const host = canvas.parentElement;
+    if (FINE_POINTER) host.addEventListener('pointermove', e => {
+      const b = host.getBoundingClientRect(); tmx = (e.clientX - b.left) / b.width; tmy = 1 - (e.clientY - b.top) / b.height;
+    }, { passive: true });
+
+    if (REDUCED_MOTION) { draw(12000); canvas.classList.add('is-ready'); return; }
+    const gate = onScreen(host, '150px 0px');
+    let started = false;
+    (function loop(t){
+      if (gate.on) { draw(t); if (!started) { started = true; canvas.classList.add('is-ready'); } }
+      requestAnimationFrame(loop);
+    })(performance.now());
+  })();
   window.__afterLang = function(){
     if (window.__navRefresh) window.__navRefresh();
     if (window.__fitFooter) window.__fitFooter();
     if (window.__tickClock) window.__tickClock();
+    if (window.__processMeasure) window.__processMeasure();
   };
 </script>
 </body>
