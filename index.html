@@ -872,60 +872,6 @@ html.lenis, html.lenis body{ height:auto; }
 @media (prefers-reduced-motion: reduce){
   .dv{ height:100vh; height:100svh; } .dv-cue{ display:none; }
 }
-
-/* =====================================================
-   SOBRE MÍ — generador de ideas con electricidad (canvas 2D)
-   ===================================================== */
-.hl{ color:var(--indigo-bright); font-weight:500; }
-strong.hl{ font-weight:600; }
-.forge{
-  position:relative; width:min(400px, 100%); aspect-ratio:700/765; margin:0 auto;
-  -webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 47%, #000 55%, transparent 100%);
-  mask-image:radial-gradient(ellipse 72% 70% at 50% 47%, #000 55%, transparent 100%);
-}
-.forge img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
-.forge-fx{ position:absolute; inset:0; width:100%; height:100%; mix-blend-mode:screen; pointer-events:none; }
-@media (max-width:991.98px){ .forge{ width:min(340px, 86%); } }
-
-/* =====================================================
-   PROCESO — línea de tiempo con punto de luz viajero
-   ===================================================== */
-.tl{ position:relative; z-index:1; margin-top:1rem; }
-.tl.reveal{ transform:none; }
-.tl-track{ position:relative; display:flex; flex-direction:column; }
-.tl-line{ position:absolute; left:23px; top:23px; bottom:23px; width:1px; background:var(--border); }
-.tl-line span{ position:absolute; inset:0; height:0; background:linear-gradient(180deg, var(--indigo-bright), var(--indigo)); transition:height 1.4s cubic-bezier(.2,.7,.2,1); }
-.tl.is-visible .tl-line span{ height:100%; }
-.tl-node{ position:relative; display:flex; gap:1.2rem; padding:1.1rem 0; opacity:0; transform:translateX(-14px); transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1); }
-.tl.is-visible .tl-node{ opacity:1; transform:none; }
-.tl-node:nth-of-type(2){ transition-delay:.15s; } .tl-node:nth-of-type(3){ transition-delay:.3s; }
-.tl-node:nth-of-type(4){ transition-delay:.45s; } .tl-node:nth-of-type(5){ transition-delay:.6s; }
-.tl-icon{
-  position:relative; z-index:1; width:46px; height:46px; flex-shrink:0; border-radius:50%;
-  display:grid; place-items:center; font-size:1.05rem; color:var(--indigo-bright);
-  background:var(--surface); border:1px solid var(--border);
-  transition:box-shadow .45s ease, border-color .45s ease, color .45s ease, background .45s ease;
-}
-.tl-tag{ font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.08em; color:var(--text-faint); transition:color .45s ease, text-shadow .45s ease; }
-.tl-body h3{ color:var(--text); font-size:1.05rem; font-weight:600; margin:0.25rem 0 0.4rem; letter-spacing:-0.01em; }
-.tl-body p{ color:var(--text-soft); font-size:0.88rem; line-height:1.55; margin:0; max-width:46ch; }
-.tl-node.is-hot .tl-icon{ color:#fff; border-color:var(--indigo-bright); background:rgba(94,106,210,0.25); box-shadow:0 0 0 8px rgba(130,143,255,0.12), 0 0 26px 6px rgba(130,143,255,0.45); }
-.tl-node.is-hot .tl-tag{ color:var(--indigo-bright); text-shadow:0 0 14px rgba(130,143,255,0.8); }
-.tl-dot{
-  position:absolute; left:0; top:0; z-index:2; width:11px; height:11px; margin:-5.5px 0 0 -5.5px; border-radius:50%;
-  background:var(--indigo-bright); opacity:0; pointer-events:none;
-  box-shadow:0 0 0 4px rgba(130,143,255,0.22), 0 0 16px 3px rgba(130,143,255,0.85);
-}
-@media (min-width:992px){
-  .tl-track{ flex-direction:row; align-items:flex-start; }
-  .tl-line{ left:23px; right:23px; top:23px; bottom:auto; width:auto; height:1px; }
-  .tl-line span{ height:100%; width:0; transition:width 1.4s cubic-bezier(.2,.7,.2,1); }
-  .tl.is-visible .tl-line span{ width:100%; }
-  .tl-node{ flex:1 1 0; flex-direction:column; gap:0; padding:0 0.9rem 0 0; transform:translateY(16px); }
-  .tl-body{ padding-top:1.2rem; }
-  .tl-body p{ font-size:0.85rem; }
-}
-@media (prefers-reduced-motion: reduce){ .tl-dot{ display:none; } }
 </style>
 </head>
 <body>
@@ -933,9 +879,7 @@ strong.hl{ font-weight:600; }
   <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/></symbol><symbol id="i-calendar-check" viewBox="0 0 16 16"><path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
   <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></symbol><symbol id="i-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/></symbol><symbol id="i-cloud-download" viewBox="0 0 16 16"><path d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/>
   <path d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708z"/></symbol><symbol id="i-cpu" viewBox="0 0 16 16"><path d="M5 0a.5.5 0 0 1 .5.5V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2A2.5 2.5 0 0 1 14 4.5h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14a2.5 2.5 0 0 1-2.5 2.5v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14A2.5 2.5 0 0 1 2 11.5H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2A2.5 2.5 0 0 1 4.5 2V.5A.5.5 0 0 1 5 0m-.5 3A1.5 1.5 0 0 0 3 4.5v7A1.5 1.5 0 0 0 4.5 13h7a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 11.5 3zM5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5zM6.5 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/></symbol><symbol id="i-diagram-3" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5zM0 11.5A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/></symbol><symbol id="i-envelope" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/></symbol><symbol id="i-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/></symbol><symbol id="i-graph-up-arrow" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5"/></symbol><symbol id="i-linkedin" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/></symbol><symbol id="i-list" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/></symbol><symbol id="i-play-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-  <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/></symbol><symbol id="i-vimeo" viewBox="0 0 16 16"><path d="M15.992 4.204q-.106 2.334-3.262 6.393-3.263 4.243-5.522 4.243-1.4 0-2.367-2.583L3.55 7.523Q2.83 4.939 2.007 4.94q-.178.001-1.254.754L0 4.724a210 210 0 0 0 2.334-2.081q1.581-1.364 2.373-1.437 1.865-.185 2.298 2.553.466 2.952.646 3.666.54 2.447 1.186 2.445.5 0 1.508-1.587 1.006-1.587 1.077-2.415.144-1.37-1.077-1.37a3 3 0 0 0-1.185.261q1.183-3.86 4.508-3.756 2.466.075 2.324 3.2z"/></symbol><symbol id="i-whatsapp" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></symbol><symbol id="i-x-lg" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></symbol><symbol id="i-magic" viewBox="0 0 16 16"><path d="M9.5 2.672a.5.5 0 1 0 1 0V.843a.5.5 0 0 0-1 0zm4.5.035A.5.5 0 0 0 13.293 2L12 3.293a.5.5 0 1 0 .707.707zM7.293 4A.5.5 0 1 0 8 3.293L6.707 2A.5.5 0 0 0 6 2.707zm-.621 2.5a.5.5 0 1 0 0-1H4.843a.5.5 0 1 0 0 1zm8.485 0a.5.5 0 1 0 0-1h-1.829a.5.5 0 0 0 0 1zM13.293 10A.5.5 0 1 0 14 9.293L12.707 8a.5.5 0 1 0-.707.707zM9.5 11.157a.5.5 0 0 0 1 0V9.328a.5.5 0 0 0-1 0zm1.854-5.097a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L8.646 5.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0l1.293-1.293Zm-3 3a.5.5 0 0 0 0-.706l-.708-.708a.5.5 0 0 0-.707 0L.646 13.94a.5.5 0 0 0 0 .707l.708.708a.5.5 0 0 0 .707 0z"/></symbol><symbol id="i-rocket-takeoff" viewBox="0 0 16 16"><path d="M9.752 6.193c.599.6 1.73.437 2.528-.362s.96-1.932.362-2.531c-.599-.6-1.73-.438-2.528.361-.798.8-.96 1.933-.362 2.532"/>
-  <path d="M15.811 3.312c-.363 1.534-1.334 3.626-3.64 6.218l-.24 2.408a2.56 2.56 0 0 1-.732 1.526L8.817 15.85a.51.51 0 0 1-.867-.434l.27-1.899c.04-.28-.013-.593-.131-.956a9 9 0 0 0-.249-.657l-.082-.202c-.815-.197-1.578-.662-2.191-1.277-.614-.615-1.079-1.379-1.275-2.195l-.203-.083a10 10 0 0 0-.655-.248c-.363-.119-.675-.172-.955-.132l-1.896.27A.51.51 0 0 1 .15 7.17l2.382-2.386c.41-.41.947-.67 1.524-.734h.006l2.4-.238C9.005 1.55 11.087.582 12.623.208c.89-.217 1.59-.232 2.08-.188.244.023.435.06.57.093q.1.026.16.045c.184.06.279.13.351.295l.029.073a3.5 3.5 0 0 1 .157.721c.055.485.051 1.178-.159 2.065m-4.828 7.475.04-.04-.107 1.081a1.54 1.54 0 0 1-.44.913l-1.298 1.3.054-.38c.072-.506-.034-.993-.172-1.418a9 9 0 0 0-.164-.45c.738-.065 1.462-.38 2.087-1.006M5.205 5c-.625.626-.94 1.351-1.004 2.09a9 9 0 0 0-.45-.164c-.424-.138-.91-.244-1.416-.172l-.38.054 1.3-1.3c.245-.246.566-.401.91-.44l1.08-.107zm9.406-3.961c-.38-.034-.967-.027-1.746.163-1.558.38-3.917 1.496-6.937 4.521-.62.62-.799 1.34-.687 2.051.107.676.483 1.362 1.048 1.928.564.565 1.25.941 1.924 1.049.71.112 1.429-.067 2.048-.688 3.079-3.083 4.192-5.444 4.556-6.987.183-.771.18-1.345.138-1.713a3 3 0 0 0-.045-.283 3 3 0 0 0-.3-.041Z"/>
-  <path d="M7.009 12.139a7.6 7.6 0 0 1-1.804-1.352A7.6 7.6 0 0 1 3.794 8.86c-1.102.992-1.965 5.054-1.839 5.18.125.126 3.936-.896 5.054-1.902Z"/></symbol><symbol id="i-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></symbol></svg>
+  <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/></symbol><symbol id="i-vimeo" viewBox="0 0 16 16"><path d="M15.992 4.204q-.106 2.334-3.262 6.393-3.263 4.243-5.522 4.243-1.4 0-2.367-2.583L3.55 7.523Q2.83 4.939 2.007 4.94q-.178.001-1.254.754L0 4.724a210 210 0 0 0 2.334-2.081q1.581-1.364 2.373-1.437 1.865-.185 2.298 2.553.466 2.952.646 3.666.54 2.447 1.186 2.445.5 0 1.508-1.587 1.006-1.587 1.077-2.415.144-1.37-1.077-1.37a3 3 0 0 0-1.185.261q1.183-3.86 4.508-3.756 2.466.075 2.324 3.2z"/></symbol><symbol id="i-whatsapp" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></symbol><symbol id="i-x-lg" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></symbol></svg>
 
 <a href="#contenido" class="skip-link" data-i18n="a11y.skip">Skip to main content</a>
 
@@ -1202,15 +1146,37 @@ strong.hl{ font-weight:600; }
   <div class="container-xl-custom">
     <div class="row align-items-center g-5">
       <div class="col-lg-4 reveal">
-        <div class="forge" id="forge" aria-hidden="true">
-          <img src="assets/forge.webp" alt="" width="700" height="765" loading="lazy" decoding="async">
-          <canvas class="forge-fx"></canvas>
+        <div class="about-photo-wrap">
+          <div class="avatar-frame" id="aboutAvatarStage" aria-hidden="true">
+            <span class="avatar-fallback" aria-hidden="true">JM</span>
+          </div>
+          <div class="avatar-badge"><svg class="bi" aria-hidden="true"><use href="#i-geo-alt-fill"/></svg> <span data-i18n="about.location">Guatemala · Remote</span></div>
+          <div class="idea-readout">
+            <span class="idea-readout-label" data-i18n="machine.label">Generating ideas</span>
+            <p class="idea-readout-text" id="ideaReadoutText" aria-live="polite"></p>
+          </div>
         </div>
       </div>
       <div class="col-lg-8 reveal reveal-delay-1">
+        <span class="eyebrow" data-i18n="about.eyebrow">About me</span>
         <h2 style="margin-top:0.75rem;" data-i18n="about.title">I believe technology should reduce complexity, not create it.</h2>
-        <p style="color:var(--text-soft); margin-top:1.1rem; font-size:1.05rem;" data-i18n="about.p1">Most product problems aren't design problems, they're <span class="hl">system problems</span>. Inside banks, SaaS platforms and fintechs, I find the <span class="hl">root problem</span>: the exact point where complexity turns into friction and starts costing money.</p>
-        <p style="color:var(--text-soft); margin-top:1rem; font-size:1.05rem;" data-i18n="about.p2">I <span class="hl">make my clients' lives easier</span> by simplifying their systems. Product strategy, UX, design systems and AI, all working toward one goal: technology people understand without effort. That's what a <strong class="hl">Human Systems Architect</strong> does.</p>
+        <p style="color:var(--text-soft); margin-top:1.1rem; font-size:1.02rem;" data-i18n="about.p1">
+          Most product problems aren't design problems. They're system problems: nobody sees how one decision in sales ripples into support, or how a poorly thought-out flow quietly costs the whole team adoption. That's where I step in, inside banks, SaaS platforms and fintechs, finding the exact point where complexity turns into friction and redesigning the system, not just the screen, so it stops costing the business money.
+        </p>
+        <p style="color:var(--text-soft); margin-top:1rem; font-size:1.02rem;" data-i18n="about.p2">
+          I combine product strategy, UX, design systems and artificial intelligence with one goal: making complex systems easy for people to understand, without friction. That's why I describe myself as a <strong style="color:var(--text);">Human Systems Architect</strong>: I don't just design interfaces, I design the relationship between people, technology and business.
+        </p>
+        <p style="color:var(--text-soft); margin-top:1rem; font-size:1.02rem;" data-i18n="about.p3">
+          I'm passionate about solving meaningful problems, mentoring teams, exploring the potential of AI, and building products that create opportunities for others.
+        </p>
+        <div style="margin-top:1.75rem;">
+          <span class="skill-chip">Design Systems</span>
+          <span class="skill-chip" data-i18n="about.chipAI">Applied AI</span>
+          <span class="skill-chip" data-i18n="about.chipMotion">Motion Design</span>
+          <span class="skill-chip" data-i18n="about.chipProto">Prototyping (Desktop &amp; Mobile)</span>
+          <span class="skill-chip" data-i18n="about.chipFintech">Fintech &amp; ERP</span>
+          <span class="skill-chip">Agile / Scrum</span>
+        </div>
       </div>
     </div>
   </div>
@@ -1223,7 +1189,8 @@ strong.hl{ font-weight:600; }
   <div class="blob blob-indigo" style="width:420px; height:420px; top:-140px; left:50%; transform:translateX(-50%);"></div>
   <div class="container-xl-custom">
     <div class="section-head mx-auto reveal">
-      <h2 data-i18n="services.title">How I <span class="hl">step in</span> when your product gets stuck</h2>
+      <span class="eyebrow" data-i18n="services.eyebrow">Services</span>
+      <h2 data-i18n="services.title">How I step in when your product gets stuck</h2>
       <p data-i18n="services.subtitle">Four entry points, depending on where your product is hurting today.</p>
     </div>
     <div class="row g-4">
@@ -1266,53 +1233,35 @@ strong.hl{ font-weight:600; }
   <div class="particle-field" data-particles aria-hidden="true"></div>
   <div class="container-xl-custom">
     <div class="section-head mx-auto reveal">
-      <h2 data-i18n="process.title"><span class="hl">5-step process</span></h2>
+      <span class="eyebrow on-dark" data-i18n="process.eyebrow">Process</span>
+      <h2 style="color:var(--text);" data-i18n="process.title">This is what it's like to work with me</h2>
       <p data-i18n="process.subtitle">Five steps, in that order, on every project. From the first brief to final validation.</p>
     </div>
-    <div class="tl reveal" id="processTimeline">
-      <div class="tl-track">
-        <div class="tl-line" aria-hidden="true"><span></span></div>
-        <span class="tl-dot" aria-hidden="true"></span>
-        <div class="tl-node">
-          <div class="tl-icon"><svg class="bi" aria-hidden="true"><use href="#i-search"/></svg></div>
-          <div class="tl-body">
-            <span class="tl-tag">01 / 05</span>
-            <h3 data-i18n="process.s1title">Discovery</h3>
-            <p data-i18n="process.s1desc">I understand the real business problem behind the design request. I don't open any tool until I know what breaks if we don't solve it.</p>
-          </div>
-        </div>
-        <div class="tl-node">
-          <div class="tl-icon"><svg class="bi" aria-hidden="true"><use href="#i-diagram-3"/></svg></div>
-          <div class="tl-body">
-            <span class="tl-tag">02 / 05</span>
-            <h3 data-i18n="process.s2title">UX/UI Design</h3>
-            <p data-i18n="process.s2desc">Information architecture and UI built on a component system, designed to scale without every new screen being a decision from scratch.</p>
-          </div>
-        </div>
-        <div class="tl-node">
-          <div class="tl-icon"><svg class="bi" aria-hidden="true"><use href="#i-cpu"/></svg></div>
-          <div class="tl-body">
-            <span class="tl-tag">03 / 05</span>
-            <h3 data-i18n="process.s3title">AI Prototype</h3>
-            <p data-i18n="process.s3desc">A working prototype, not a mockup, to validate with real data before engineering invests time in the wrong direction.</p>
-          </div>
-        </div>
-        <div class="tl-node">
-          <div class="tl-icon"><svg class="bi" aria-hidden="true"><use href="#i-magic"/></svg></div>
-          <div class="tl-body">
-            <span class="tl-tag">04 / 05</span>
-            <h3 data-i18n="process.s4title">Motion &amp; polish</h3>
-            <p data-i18n="process.s4desc">Micro-interactions that tell the user what's happening, so the system feels as solid as it actually is.</p>
-          </div>
-        </div>
-        <div class="tl-node">
-          <div class="tl-icon"><svg class="bi" aria-hidden="true"><use href="#i-rocket-takeoff"/></svg></div>
-          <div class="tl-body">
-            <span class="tl-tag">05 / 05</span>
-            <h3 data-i18n="process.s5title">Delivery &amp; handoff</h3>
-            <p data-i18n="process.s5desc">Clear documentation and support through implementation, so what got designed is exactly what gets built.</p>
-          </div>
-        </div>
+    <div class="process-steps">
+      <div class="process-step reveal reveal-delay-1">
+        <div class="process-num">01</div>
+        <h3 data-i18n="process.s1title">Discovery</h3>
+        <p data-i18n="process.s1desc">I understand the real business problem behind the design request. I don't open any tool until I know what breaks if we don't solve it.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="process-num">02</div>
+        <h3 data-i18n="process.s2title">UX/UI Design</h3>
+        <p data-i18n="process.s2desc">Information architecture and UI built on a component system, designed to scale without every new screen being a decision from scratch.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-3">
+        <div class="process-num">03</div>
+        <h3 data-i18n="process.s3title">AI Prototype</h3>
+        <p data-i18n="process.s3desc">A working prototype, not a mockup, to validate with real data before engineering invests time in the wrong direction.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-4">
+        <div class="process-num">04</div>
+        <h3 data-i18n="process.s4title">Motion &amp; polish</h3>
+        <p data-i18n="process.s4desc">Micro-interactions that tell the user what's happening, so the system feels as solid as it actually is.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="process-num">05</div>
+        <h3 data-i18n="process.s5title">Delivery &amp; handoff</h3>
+        <p data-i18n="process.s5desc">Clear documentation and support through implementation, so what got designed is exactly what gets built.</p>
       </div>
     </div>
   </div>
@@ -1327,7 +1276,8 @@ strong.hl{ font-weight:600; }
       <canvas class="cta-shader" id="ctaShader" aria-hidden="true"></canvas>
       <div class="particle-field" data-particles aria-hidden="true"></div>
       <div style="position:relative; z-index:1;">
-        <h2 data-i18n="cta.title">Where is complexity costing you <span class="hl">money</span>?</h2>
+        <span class="eyebrow on-dark" style="justify-content:center;" data-i18n="cta.eyebrow">Let's start</span>
+        <h2 data-i18n="cta.title">Where is complexity costing your product money?</h2>
         <p data-i18n="cta.subtitle">Tell me what stage your project is at. I usually reply over WhatsApp or email within 24 business hours.</p>
         <div class="hero-ctas">
           <a href="https://calendar.app.google/GWivwZbos5j8QxMU7" target="_blank" rel="noopener" class="btn-cta"><svg class="bi" aria-hidden="true"><use href="#i-calendar-check"/></svg> <span data-i18n="cta.bookCall">Book a call</span></a>
@@ -1541,8 +1491,8 @@ strong.hl{ font-weight:600; }
       "about.eyebrow": "Sobre mí",
       "about.location": "Guatemala · Remoto",
       "about.title": "Creo que la tecnología debería reducir la complejidad, no crearla.",
-      "about.p1": "La mayoría de los problemas de producto no son de diseño, son <span class=\"hl\">problemas de sistema</span>. En bancos, plataformas SaaS y fintech encuentro el <span class=\"hl\">problema raíz</span>: el punto exacto donde la complejidad se convierte en fricción y empieza a costar dinero.",
-      "about.p2": "<span class=\"hl\">Le hago la vida fácil a mis clientes</span> simplificando sus sistemas. Estrategia de producto, UX, sistemas de diseño e IA trabajando hacia un mismo objetivo: tecnología que la gente entiende sin esfuerzo. Eso es lo que hace un <strong class=\"hl\">Human Systems Architect</strong>.",
+      "about.p1": "La mayoría de los problemas de producto no son problemas de diseño. Son problemas de sistema: nadie ve cómo una decisión en ventas afecta a soporte, o cómo un flujo mal pensado le cuesta adopción a todo el equipo. Ahí es donde intervengo, en bancos, plataformas SaaS y fintech, encontrando el punto exacto donde la complejidad se convierte en fricción y rediseñando el sistema completo, no solo la pantalla, para que deje de costarle dinero al negocio.",
+      "about.p2": "Combino estrategia de producto, UX, sistemas de diseño e inteligencia artificial con un solo objetivo: que las personas entiendan sistemas complejos sin fricción. Por eso me describo como <strong style=\"color:var(--text);\">Human Systems Architect</strong>: no diseño interfaces, diseño la relación entre las personas, la tecnología y el negocio.",
       "about.p3": "Me apasiona resolver problemas que importan, mentorear equipos, explorar el potencial de la IA y construir productos que abren oportunidades para otros.",
       "about.chipAI": "IA aplicada",
       "machine.label": "Generando ideas",
@@ -1551,7 +1501,7 @@ strong.hl{ font-weight:600; }
       "about.chipProto": "Prototipado (Desktop &amp; Mobile)",
       "about.chipFintech": "Fintech &amp; ERP",
       "services.eyebrow": "Servicios",
-      "services.title": "Cómo <span class=\"hl\">intervengo</span> cuando tu producto se atora",
+      "services.title": "Cómo intervengo cuando tu producto se atora",
       "services.subtitle": "Cuatro puntos de entrada, según dónde esté doliendo tu producto hoy.",
       "services.s1title": "UX/UI &amp; Design Systems",
       "services.s1desc": "Tu producto creció a punta de parches y cada feature nueva tarda más y rompe algo. Audito el sistema completo, encuentro dónde se perdió la coherencia, y dejo una base que tu equipo puede escalar sin negociar cada decisión desde cero.",
@@ -1595,7 +1545,7 @@ strong.hl{ font-weight:600; }
       "ds.modalTitle": "AIMS360 · Design System",
       "ds.close": "Cerrar",
       "process.eyebrow": "Proceso",
-      "process.title": "<span class=\"hl\">Proceso de 5 pasos</span>",
+      "process.title": "Así es trabajar conmigo",
       "process.subtitle": "Cinco pasos, en ese orden, en cada proyecto. Desde el primer brief hasta la validación final.",
       "process.s1title": "Descubrimiento",
       "process.s1desc": "Entiendo el problema de negocio real detrás del pedido de diseño. No abro ninguna herramienta hasta saber qué se rompe si no lo resolvemos.",
@@ -1608,7 +1558,7 @@ strong.hl{ font-weight:600; }
       "process.s5title": "Entrega &amp; handoff",
       "process.s5desc": "Documentación clara y acompañamiento en implementación, para que lo que se diseñó sea exactamente lo que se construye.",
       "cta.eyebrow": "Empecemos",
-      "cta.title": "¿Dónde te está costando <span class=\"hl\">dinero</span> la complejidad?",
+      "cta.title": "¿Dónde te está costando dinero la complejidad de tu producto?",
       "cta.subtitle": "Cuéntame en qué etapa está tu proyecto. Respondo por WhatsApp o correo, normalmente en menos de 24 horas hábiles.",
       "cta.bookCall": "Reservar una llamada",
       "cta.whatsapp": "Escribir por WhatsApp",
@@ -1669,8 +1619,8 @@ strong.hl{ font-weight:600; }
       "about.eyebrow": "About me",
       "about.location": "Guatemala · Remote",
       "about.title": "I believe technology should reduce complexity, not create it.",
-      "about.p1": "Most product problems aren't design problems, they're <span class=\"hl\">system problems</span>. Inside banks, SaaS platforms and fintechs, I find the <span class=\"hl\">root problem</span>: the exact point where complexity turns into friction and starts costing money.",
-      "about.p2": "I <span class=\"hl\">make my clients' lives easier</span> by simplifying their systems. Product strategy, UX, design systems and AI, all working toward one goal: technology people understand without effort. That's what a <strong class=\"hl\">Human Systems Architect</strong> does.",
+      "about.p1": "Most product problems aren't design problems. They're system problems: nobody sees how one decision in sales ripples into support, or how a poorly thought-out flow quietly costs the whole team adoption. That's where I step in, inside banks, SaaS platforms and fintechs, finding the exact point where complexity turns into friction and redesigning the system, not just the screen, so it stops costing the business money.",
+      "about.p2": "I combine product strategy, UX, design systems and artificial intelligence with one goal: making complex systems easy for people to understand, without friction. That's why I describe myself as a <strong style=\"color:var(--text);\">Human Systems Architect</strong>: I don't just design interfaces, I design the relationship between people, technology and business.",
       "about.p3": "I'm passionate about solving meaningful problems, mentoring teams, exploring the potential of AI, and building products that create opportunities for others.",
       "about.chipAI": "Applied AI",
       "machine.label": "Generating ideas",
@@ -1679,7 +1629,7 @@ strong.hl{ font-weight:600; }
       "about.chipProto": "Prototyping (Desktop &amp; Mobile)",
       "about.chipFintech": "Fintech &amp; ERP",
       "services.eyebrow": "Services",
-      "services.title": "How I <span class=\"hl\">step in</span> when your product gets stuck",
+      "services.title": "How I step in when your product gets stuck",
       "services.subtitle": "Four entry points, depending on where your product is hurting today.",
       "services.s1title": "UX/UI &amp; Design Systems",
       "services.s1desc": "Your product grew by patching things together, and now every new feature takes longer and breaks something else. I audit the whole system, find where the coherence broke down, and leave a foundation your team can scale without renegotiating every decision from scratch.",
@@ -1723,7 +1673,7 @@ strong.hl{ font-weight:600; }
       "ds.modalTitle": "AIMS360 · Design System",
       "ds.close": "Close",
       "process.eyebrow": "Process",
-      "process.title": "<span class=\"hl\">5-step process</span>",
+      "process.title": "This is what it's like to work with me",
       "process.subtitle": "Five steps, in that order, on every project. From the first brief to final validation.",
       "process.s1title": "Discovery",
       "process.s1desc": "I understand the real business problem behind the design request. I don't open any tool until I know what breaks if we don't solve it.",
@@ -1736,7 +1686,7 @@ strong.hl{ font-weight:600; }
       "process.s5title": "Delivery &amp; handoff",
       "process.s5desc": "Clear documentation and support through implementation, so what got designed is exactly what gets built.",
       "cta.eyebrow": "Let's start",
-      "cta.title": "Where is complexity costing you <span class=\"hl\">money</span>?",
+      "cta.title": "Where is complexity costing your product money?",
       "cta.subtitle": "Tell me what stage your project is at. I usually reply over WhatsApp or email within 24 business hours.",
       "cta.bookCall": "Book a call",
       "cta.whatsapp": "Message on WhatsApp",
@@ -1986,6 +1936,298 @@ strong.hl{ font-weight:600; }
   })();
 
 
+  // =====================================================
+  // F. MÁQUINA DE IDEAS 3D — "Sobre mí" (misma familia visual
+  // que el hero: geometría índigo facetada + núcleo cálido)
+  // =====================================================
+  function initAbout3D(){
+    const stage = document.getElementById('aboutAvatarStage');
+    if (!stage) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (typeof THREE === 'undefined') return;
+
+    let renderer, scene, camera, group, core, antennaTip, halo, outerShell, sparkles, gearA, gearB;
+    let mouseX = 0, mouseY = 0, rotY = 0, rotX = 0;
+    let lastTime = performance.now();
+    const emissions = [];
+
+    function buildMachine(){
+      const w = stage.clientWidth, h = stage.clientHeight;
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(38, w / h, 0.1, 100);
+      camera.position.set(0, 0.25, 5.9);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(w, h);
+      renderer.domElement.classList.add('gl-fade');
+      stage.appendChild(renderer.domElement);
+      requestAnimationFrame(() => requestAnimationFrame(() => renderer.domElement.classList.add('is-ready')));
+
+      const fallback = stage.querySelector('.avatar-fallback');
+      if (fallback) fallback.style.display = 'none';
+
+      scene.add(new THREE.AmbientLight(0x8890ff, 0.55));
+      const key = new THREE.DirectionalLight(0xffffff, 0.8);
+      key.position.set(2.5, 3, 4);
+      scene.add(key);
+      const rim = new THREE.PointLight(0x5e6ad2, 1, 18);
+      rim.position.set(-3, -1.5, 2.5);
+      scene.add(rim);
+      const fill = new THREE.PointLight(0x9aa3ff, 0.5, 14);
+      fill.position.set(2.5, -1, 3);
+      scene.add(fill);
+      const warm = new THREE.PointLight(0xf2a93b, 0.9, 6);
+      warm.position.set(0, 0.3, 1.2);
+      scene.add(warm);
+
+      group = new THREE.Group();
+      scene.add(group);
+
+      const shellMat = new THREE.MeshStandardMaterial({
+        color: 0x5e6ad2, transparent: true, opacity: 0.42,
+        roughness: 0.45, metalness: 0.08, flatShading: true
+      });
+      const edgeMat = new THREE.LineBasicMaterial({ color: 0x9aa3ff, transparent: true, opacity: 0.7 });
+
+      // Base: la "plataforma" de la máquina
+      const baseGeo = new THREE.CylinderGeometry(0.95, 1.1, 0.3, 6);
+      const base = new THREE.Mesh(baseGeo, shellMat);
+      base.position.set(0, -1.45, 0);
+      group.add(base);
+      group.add(lined(baseGeo, base.position, edgeMat));
+
+      // Cámara central: donde "ocurre" la idea — icosaedro facetado con núcleo cálido adentro
+      const chamberGeo = new THREE.IcosahedronGeometry(0.85, 2);
+      const chamber = new THREE.Mesh(chamberGeo, shellMat);
+      chamber.position.set(0, 0.15, 0);
+      group.add(chamber);
+      group.add(lined(chamberGeo, chamber.position, edgeMat));
+
+      // Anillo ecuatorial alrededor de la cámara
+      const bandGeo = new THREE.TorusGeometry(0.95, 0.02, 8, 48);
+      const band = new THREE.Mesh(bandGeo, new THREE.MeshStandardMaterial({
+        color: 0x9aa3ff, emissive: 0x5e6ad2, emissiveIntensity: 0.4, transparent: true, opacity: 0.6
+      }));
+      band.position.set(0, 0.15, 0);
+      band.rotation.x = Math.PI / 2.3;
+      group.add(band);
+      halo = band;
+
+      // Embudo/chimenea sobre la cámara, por donde "salen" las ideas
+      const funnelGeo = new THREE.CylinderGeometry(0.1, 0.32, 0.6, 6);
+      const funnel = new THREE.Mesh(funnelGeo, shellMat);
+      funnel.position.set(0, 1.05, 0);
+      group.add(funnel);
+      group.add(lined(funnelGeo, funnel.position, edgeMat));
+
+      // Antena: remata la máquina, con una punta que respira
+      const rodGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.55, 6);
+      const rod = new THREE.Mesh(rodGeo, new THREE.MeshStandardMaterial({ color: 0x9aa3ff, roughness: 0.3, metalness: 0.3 }));
+      rod.position.set(0, 1.62, 0);
+      group.add(rod);
+      const tipGeo = new THREE.SphereGeometry(0.075, 16, 16);
+      antennaTip = new THREE.Mesh(tipGeo, new THREE.MeshStandardMaterial({
+        color: 0x9aa3ff, emissive: 0x5e6ad2, emissiveIntensity: 0.7
+      }));
+      antennaTip.position.set(0, 1.92, 0);
+      group.add(antennaTip);
+
+      // Engranajes: dos anillos girando a distinta velocidad, a los costados
+      const gearAGeo = new THREE.TorusGeometry(0.34, 0.05, 8, 24);
+      gearA = new THREE.Mesh(gearAGeo, shellMat);
+      gearA.position.set(1.15, -0.15, 0.15);
+      group.add(gearA);
+      group.add(lined(gearAGeo, gearA.position, edgeMat));
+
+      const gearBGeo = new THREE.TorusGeometry(0.24, 0.04, 8, 20);
+      gearB = new THREE.Mesh(gearBGeo, shellMat);
+      gearB.position.set(-1.05, 0.5, -0.2);
+      gearB.rotation.x = Math.PI / 2;
+      group.add(gearB);
+      group.add(lined(gearBGeo, gearB.position, edgeMat));
+
+      // Capa exterior: campo de sistema que envuelve toda la máquina
+      const outerGeo = new THREE.IcosahedronGeometry(1.55, 1);
+      outerShell = new THREE.LineSegments(
+        new THREE.EdgesGeometry(outerGeo),
+        new THREE.LineBasicMaterial({ color: 0x5e6ad2, transparent: true, opacity: 0.18 })
+      );
+      outerShell.position.set(0, 0.1, 0);
+      group.add(outerShell);
+
+      // Sombra de contacto
+      const shadowGeo = new THREE.CircleGeometry(1.15, 32);
+      const shadow = new THREE.Mesh(shadowGeo, new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.28 }));
+      shadow.rotation.x = -Math.PI / 2;
+      shadow.position.set(0, -1.63, 0);
+      group.add(shadow);
+
+      // Núcleo cálido: la "calidez humana" dentro del mecanismo
+      const coreGeo = new THREE.SphereGeometry(0.3, 20, 20);
+      const coreMat = new THREE.MeshStandardMaterial({
+        color: 0x3a2410, emissive: 0xf2a93b, emissiveIntensity: 0.85, roughness: 0.6
+      });
+      core = new THREE.Mesh(coreGeo, coreMat);
+      core.position.set(0, 0.17, 0.05);
+      group.add(core);
+
+      // Nodos y conexiones — circuitos que unen la cámara con la base y los engranajes
+      const nodeGeo = new THREE.SphereGeometry(0.045, 14, 14);
+      const nodeMat = new THREE.MeshStandardMaterial({ color: 0x9aa3ff, emissive: 0x5e6ad2, emissiveIntensity: 0.6 });
+      const nodePositions = [
+        [1.2, 0.55, 0.3], [-1.15, -0.35, -0.2], [0.75, -1.15, 0.5], [-0.7, 1.05, -0.35]
+      ];
+      const lineMat = new THREE.LineBasicMaterial({ color: 0x5e6ad2, transparent: true, opacity: 0.32 });
+      nodePositions.forEach((p, i) => {
+        const s = new THREE.Mesh(nodeGeo, nodeMat);
+        s.position.set(p[0], p[1], p[2]);
+        group.add(s);
+        const anchor = i % 2 === 0 ? [0, 0.15, 0] : [0, -1.45, 0];
+        const geo = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(p[0], p[1], p[2]),
+          new THREE.Vector3(anchor[0], anchor[1], anchor[2])
+        ]);
+        group.add(new THREE.Line(geo, lineMat));
+      });
+
+      // Chispas ambientales
+      const sparkleCount = 45;
+      const positions = new Float32Array(sparkleCount * 3);
+      for (let i = 0; i < sparkleCount; i++) {
+        const r = 1.8 + Math.random() * 0.9;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos((Math.random() * 2) - 1);
+        positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+        positions[i * 3 + 1] = 0.1 + r * Math.cos(phi) * 0.6;
+        positions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta) * 0.6;
+      }
+      const sparkleGeo = new THREE.BufferGeometry();
+      sparkleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      sparkles = new THREE.Points(sparkleGeo, new THREE.PointsMaterial({
+        color: 0x9aa3ff, size: 0.028, transparent: true, opacity: 0.5, sizeAttenuation: true
+      }));
+      group.add(sparkles);
+    }
+
+    function lined(geo, position, mat){
+      const l = new THREE.LineSegments(new THREE.EdgesGeometry(geo), mat);
+      l.position.copy(position);
+      return l;
+    }
+
+    // Emite una pequeña "idea" luminosa desde la punta de la antena
+    function emitIdea(){
+      if (!group || typeof THREE === 'undefined') return;
+      const geo = new THREE.SphereGeometry(0.055, 12, 12);
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0xf2a93b, emissive: 0xf2a93b, emissiveIntensity: 1, transparent: true, opacity: 1
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(0, 1.95, 0);
+      group.add(mesh);
+      emissions.push({ mesh: mesh, life: 0, maxLife: 1.3 });
+    }
+    window.__machineEmitIdea = emitIdea;
+
+    function onMouseMove(e){
+      const rect = stage.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      mouseX = Math.max(-1, Math.min(1, (e.clientX - cx) / (window.innerWidth / 2)));
+      mouseY = Math.max(-1, Math.min(1, (e.clientY - cy) / (window.innerHeight / 2)));
+    }
+    function onResize(){
+      if (!stage.clientWidth || !stage.clientHeight) return;
+      camera.aspect = stage.clientWidth / stage.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(stage.clientWidth, stage.clientHeight);
+    }
+    const gate = onScreen(stage);
+    function animate(){
+      requestAnimationFrame(animate);
+      if (!gate.on) { lastTime = performance.now(); return; }
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+      const t = now * 0.001;
+
+      // La máquina gira despacio y de forma continua (no es un rostro, puede girar entero)
+      rotY += (mouseX * 0.25 - 0) * 0.02 + 0.0028;
+      rotX += (mouseY * 0.12 - rotX) * 0.04;
+      group.rotation.y = rotY;
+      group.rotation.x = rotX;
+
+      if (core) core.scale.setScalar(1 + Math.sin(t * 1.6) * 0.06);
+      if (antennaTip) antennaTip.scale.setScalar(1 + Math.sin(t * 2.2) * 0.18);
+      if (halo) halo.rotation.z += 0.004;
+      if (gearA) gearA.rotation.z += 0.018;
+      if (gearB) gearB.rotation.y += 0.014;
+      if (outerShell) outerShell.rotation.y -= 0.0015;
+      if (sparkles) sparkles.rotation.y += 0.0009;
+
+      for (let i = emissions.length - 1; i >= 0; i--) {
+        const em = emissions[i];
+        em.life += dt;
+        const p = Math.min(em.life / em.maxLife, 1);
+        em.mesh.position.y += dt * 0.55;
+        em.mesh.material.opacity = 1 - p;
+        em.mesh.scale.setScalar(1 + p * 1.8);
+        if (em.life >= em.maxLife) {
+          group.remove(em.mesh);
+          emissions.splice(i, 1);
+        }
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    try {
+      buildMachine();
+      window.addEventListener('mousemove', onMouseMove, { passive: true });
+      window.addEventListener('resize', onResize);
+      animate();
+    } catch (e) {
+      // Degradación silenciosa: si WebGL falla, quedan las iniciales "JM"
+    }
+  }
+
+  // =====================================================
+  // H. TEXTO DE LA MÁQUINA — ideas generadas, cambian con el tiempo
+  // =====================================================
+  (function(){
+    const textEl = document.getElementById('ideaReadoutText');
+    if (!textEl) return;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let ideas = [];
+    let idx = 0;
+    let timer = null;
+
+    function loadIdeas(){
+      const lang = window.__currentLang || 'es';
+      const raw = (I18N[lang] && I18N[lang]['machine.ideas']) || '';
+      ideas = raw.split('|').map(s => s.trim()).filter(Boolean);
+      idx = 0;
+    }
+    function showNext(){
+      if (!ideas.length) return;
+      textEl.classList.add('is-fading');
+      setTimeout(() => {
+        idx = (idx + 1) % ideas.length;
+        textEl.textContent = ideas[idx];
+        textEl.classList.remove('is-fading');
+        if (typeof window.__machineEmitIdea === 'function') window.__machineEmitIdea();
+      }, 260);
+    }
+    function start(){
+      loadIdeas();
+      if (ideas.length) textEl.textContent = ideas[0];
+      if (timer) clearInterval(timer);
+      if (!reducedMotion) timer = setInterval(showNext, 4500);
+    }
+    window.__rebuildIdeaMachine = start;
+    start();
+  })();
 
   // =====================================================
   // F2. DESIGN SYSTEM MODAL — iframe embebido, carga diferida
@@ -2104,6 +2346,37 @@ strong.hl{ font-weight:600; }
     prevBtn.addEventListener('click', prev);
     nextBtn.addEventListener('click', next);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeLightbox(); });
+  })();
+
+  // =====================================================
+  // I. CARGA DIFERIDA DE THREE.JS — el 3D no bloquea el primer render
+  // =====================================================
+  (function(){
+    if (REDUCED_MOTION) return;
+    const THREE_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    let loading = null;
+    function loadThree(){
+      if (window.THREE) return Promise.resolve();
+      if (!loading) loading = new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = THREE_SRC; s.async = true; s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+      return loading;
+    }
+    const idle = window.requestIdleCallback || (cb => setTimeout(cb, 250));
+    function safe(fn){ return () => { try { fn(); } catch (e) {} }; }
+
+    // Máquina de ideas: cuando "Sobre mí" se acerca al viewport
+    const about = document.getElementById('aboutAvatarStage');
+    if (about && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        if (!entries.some(e => e.isIntersecting)) return;
+        io.disconnect();
+        loadThree().then(safe(initAbout3D)).catch(() => {});
+      }, { rootMargin: '500px 0px' });
+      io.observe(about);
+    }
   })();
 
   // =====================================================
@@ -2537,160 +2810,10 @@ void main(){
     });
     window.__dvLang = soundLabel; soundLabel();
   })();
-
-  // =====================================================
-  // F. SOBRE MÍ — electricidad sobre el generador de ideas
-  // Rayos que salen del cubo hacia la cámara, núcleo que pulsa y cubos que flotan.
-  // =====================================================
-  (function(){
-    const box = document.getElementById('forge');
-    if (!box) return;
-    const cv = box.querySelector('canvas'), ctx = cv.getContext('2d');
-    const CORE = { x: .503, y: .533 };                  // centro del cubo (proporción de la imagen)
-    const CH = { x0: .35, x1: .665, y0: .15, y1: .74 };  // paredes internas de la cámara
-    let W = 0, H = 0, bolts = [], cubes = [], energy = 1, spawnAcc = 0, cubeAcc = 0, flash = 0, last = 0;
-    function size(){
-      const d = Math.min(window.devicePixelRatio || 1, 2);
-      W = box.clientWidth; H = box.clientHeight;
-      cv.width = Math.round(W * d); cv.height = Math.round(H * d); ctx.setTransform(d, 0, 0, d, 0, 0);
-    }
-    // Rayo por desplazamiento de punto medio: cada pasada quiebra los segmentos
-    function zigzag(x1, y1, x2, y2, disp){
-      let pts = [[x1, y1], [x2, y2]];
-      for (let k = 0; k < 6; k++) {
-        const np = [pts[0]];
-        for (let i = 1; i < pts.length; i++) {
-          const [ax, ay] = pts[i - 1], [bx, by] = pts[i];
-          const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy) || 1;
-          const off = (Math.random() - .5) * disp;
-          np.push([(ax + bx) / 2 - dy / len * off, (ay + by) / 2 + dx / len * off], [bx, by]);
-        }
-        pts = np; disp *= .52;
-      }
-      return pts;
-    }
-    function spawnBolt(){
-      const cx = CORE.x * W, cy = CORE.y * H;
-      const side = Math.random();
-      let tx, ty;
-      if (side < .4) { tx = CH.x0 * W; ty = (CH.y0 + Math.random() * (CH.y1 - CH.y0)) * H; }
-      else if (side < .8) { tx = CH.x1 * W; ty = (CH.y0 + Math.random() * (CH.y1 - CH.y0)) * H; }
-      else { tx = (CH.x0 + Math.random() * (CH.x1 - CH.x0)) * W; ty = CH.y0 * H; }
-      const len = Math.hypot(tx - cx, ty - cy);
-      const main = zigzag(cx, cy, tx, ty, len * .35);
-      const b = { pts: main, life: .1 + Math.random() * .18, age: 0, hue: Math.random() < .35 ? 'v' : 'c', w: .9 + Math.random() * .7, branches: [] };
-      if (Math.random() < .55) {                       // ramita que sale a mitad del rayo
-        const p = main[Math.floor(main.length * (.3 + Math.random() * .4))];
-        const ang = Math.atan2(ty - cy, tx - cx) + (Math.random() - .5) * 1.6;
-        const bl = len * (.2 + Math.random() * .25);
-        b.branches.push(zigzag(p[0], p[1], p[0] + Math.cos(ang) * bl, p[1] + Math.sin(ang) * bl, bl * .4));
-      }
-      bolts.push(b); flash = Math.min(1, flash + .45);
-    }
-    function spawnCube(){
-      cubes.push({ x: CORE.x * W + (Math.random() - .5) * W * .12, y: CORE.y * H + (Math.random() - .5) * H * .06,
-        vx: (Math.random() - .5) * 14, vy: -(10 + Math.random() * 22), r: Math.random() * Math.PI, vr: (Math.random() - .5) * 2,
-        s: 2.5 + Math.random() * 4, life: 1.6 + Math.random() * 1.6, age: 0 });
-    }
-    function path(pts){ ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); }
-    function drawBolt(b){
-      const a = Math.max(0, 1 - b.age / b.life) * (.65 + Math.random() * .35);   // parpadeo
-      const glow = b.hue === 'v' ? 'rgba(165,139,255,' : 'rgba(110,200,255,';
-      for (const pts of [b.pts, ...b.branches]) {
-        const thin = pts !== b.pts ? .6 : 1;
-        path(pts); ctx.strokeStyle = glow + (a * .35) + ')'; ctx.lineWidth = 6 * b.w * thin; ctx.shadowBlur = 18; ctx.shadowColor = b.hue === 'v' ? '#a58bff' : '#6ec8ff'; ctx.stroke();
-        path(pts); ctx.strokeStyle = 'rgba(235,248,255,' + a + ')'; ctx.lineWidth = 1.3 * b.w * thin; ctx.shadowBlur = 6; ctx.stroke();
-      }
-    }
-    function frame(now){
-      const t = now / 1000, dt = last ? Math.min(.05, t - last) : .016; last = t;
-      ctx.clearRect(0, 0, W, H);
-      ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      // núcleo que respira (y destella con cada rayo)
-      const cx = CORE.x * W, cy = CORE.y * H, R = W * (.16 + .02 * Math.sin(t * 2.2)) * (1 + flash * .35);
-      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
-      g.addColorStop(0, 'rgba(170,235,255,' + (.42 + flash * .35) + ')');
-      g.addColorStop(.35, 'rgba(120,150,255,' + (.18 + flash * .15) + ')');
-      g.addColorStop(1, 'rgba(94,106,210,0)');
-      ctx.shadowBlur = 0; ctx.fillStyle = g; ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
-      flash = Math.max(0, flash - dt * 3.2);
-      // rayos
-      spawnAcc += dt * 3.2 * energy;
-      while (spawnAcc > 1) { spawnAcc -= 1; spawnBolt(); }
-      bolts = bolts.filter(b => (b.age += dt) < b.life);
-      bolts.forEach(drawBolt);
-      // cubitos de ideas que suben
-      cubeAcc += dt * 1.6 * energy;
-      while (cubeAcc > 1) { cubeAcc -= 1; spawnCube(); }
-      ctx.shadowBlur = 10; ctx.shadowColor = '#7fd8ff';
-      cubes = cubes.filter(c => (c.age += dt) < c.life);
-      cubes.forEach(c => {
-        c.x += c.vx * dt; c.y += c.vy * dt; c.r += c.vr * dt;
-        const a = Math.sin(Math.PI * c.age / c.life) * .9;
-        ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(c.r);
-        ctx.fillStyle = 'rgba(150,225,255,' + (a * .55) + ')'; ctx.fillRect(-c.s / 2, -c.s / 2, c.s, c.s);
-        ctx.strokeStyle = 'rgba(225,245,255,' + a + ')'; ctx.lineWidth = .8; ctx.strokeRect(-c.s / 2, -c.s / 2, c.s, c.s);
-        ctx.restore();
-      });
-      ctx.globalCompositeOperation = 'source-over';
-      energy += ((box.matches(':hover') ? 2.6 : 1) - energy) * Math.min(1, dt * 3);   // con el cursor encima hay más energía
-    }
-    size();
-    window.addEventListener('resize', size);
-    if (REDUCED_MOTION) { frame(2000); return; }
-    const gate = onScreen(box);
-    (function loop(now){ if (gate.on) frame(now); else last = 0; requestAnimationFrame(loop); })(performance.now());
-  })();
-
-  // =====================================================
-  // T. PROCESO — línea que se dibuja y un punto de luz que recorre los pasos
-  // =====================================================
-  (function(){
-    const tl = document.getElementById('processTimeline');
-    if (!tl) return;
-    const dot = tl.querySelector('.tl-dot');
-    const nodes = Array.from(tl.querySelectorAll('.tl-node'));
-    const icons = nodes.map(n => n.querySelector('.tl-icon'));
-    if (REDUCED_MOTION) return;
-    let pts = [];
-    function measure(){
-      const r = tl.getBoundingClientRect();
-      pts = icons.map(ic => { const b = ic.getBoundingClientRect(); return [b.left + b.width / 2 - r.left, b.top + b.height / 2 - r.top]; });
-    }
-    const MOVE = 1.25, DWELL = .55, n = icons.length;
-    const CYCLE = (n - 1) * MOVE + n * DWELL + .8;      // ida completa + pausa antes de reiniciar
-    const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-    let t0 = 0, started = false, hot = -1;
-    function frame(now){
-      if (!started) return;
-      let t = ((now / 1000 - t0) % CYCLE), x, y, at = -1, op = 1;
-      for (let i = 0; i < n; i++) {
-        if (t < DWELL) { [x, y] = pts[i]; at = i; break; }
-        t -= DWELL;
-        if (i === n - 1) { [x, y] = pts[i]; op = Math.max(0, 1 - t / .5); break; }   // se desvanece al final
-        if (t < MOVE) { const k = ease(t / MOVE); x = pts[i][0] + (pts[i + 1][0] - pts[i][0]) * k; y = pts[i][1] + (pts[i + 1][1] - pts[i][1]) * k; break; }
-        t -= MOVE;
-      }
-      dot.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
-      dot.style.opacity = op.toFixed(2);
-      if (at !== hot) { if (hot >= 0) nodes[hot].classList.remove('is-hot'); hot = at; if (at >= 0) nodes[at].classList.add('is-hot'); }
-    }
-    const gate = onScreen(tl);
-    // arranca cuando la línea terminó de dibujarse
-    new IntersectionObserver((es, io) => {
-      if (!es[0].isIntersecting) return; io.disconnect();
-      setTimeout(() => { measure(); t0 = performance.now() / 1000; started = true; tl.classList.add('dots-live'); }, 1500);
-    }, { threshold: .35 }).observe(tl);
-    window.addEventListener('resize', measure);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
-    window.__tlMeasure = measure;
-    (function loop(now){ if (gate.on) frame(now); requestAnimationFrame(loop); })(performance.now());
-  })();
   window.__afterLang = function(){
     if (window.__navRefresh) window.__navRefresh();
     if (window.__tickClock) window.__tickClock();
     if (window.__dvLang) window.__dvLang();
-    if (window.__tlMeasure) window.__tlMeasure();
   };
 </script>
 </body>
