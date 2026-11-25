@@ -843,8 +843,9 @@ html.lenis, html.lenis body{ height:auto; }
 .dv-copy .hero-ctas{ justify-content:center; margin-bottom:2.4rem; }
 .dv-copy .hero-stats{ justify-content:center; margin:0 auto; border-top-color:rgba(255,255,255,0.12); }
 .dv-copy .hero-stat span{ color:rgba(247,248,248,0.55); }
-.dv-copy-b{ pointer-events:none; opacity:0; align-items:flex-start; padding-top:calc(var(--nav-h, 68px) + 18vh); padding-top:calc(var(--nav-h, 68px) + 18svh); }
-@media (max-width:760px){ .dv-copy-b{ padding-top:calc(var(--nav-h, 68px) + 12svh); padding-left:24px; padding-right:24px; } }
+.dv-copy-b{ display:block; padding:0; pointer-events:none; opacity:1; transform:none; }
+.dv-copy-b .dv-final{ position:absolute; left:16px; right:16px; opacity:0; will-change:opacity, transform; }
+.dv-final em{ font-style:normal; color:var(--indigo-bright); text-shadow:0 0 50px rgba(130,143,255,0.45); }
 .dv-final{
   margin:0; font-weight:600; letter-spacing:-0.04em; line-height:1; color:#fff;
   font-size:clamp(2.4rem, 6.2vw, 5.4rem); text-shadow:0 0 60px rgba(130,143,255,0.35);
@@ -956,7 +957,8 @@ html.lenis, html.lenis body{ height:auto; }
       </div>
     </div>
     <div class="dv-copy dv-copy-b" id="dvCopyB" aria-hidden="true">
-      <p class="dv-final" data-i18n="hero.final">From complex to simple.</p>
+      <p class="dv-final dv-final-a" id="dvFinalA" data-i18n="hero.finalA">From <em>complex</em></p>
+      <p class="dv-final dv-final-b" id="dvFinalB" data-i18n="hero.finalB">to simple.</p>
     </div>
 
     <div class="dv-cue" id="dvCue" aria-hidden="true"></div>
@@ -1474,7 +1476,8 @@ html.lenis, html.lenis body{ height:auto; }
       "nav.cta": "Agendar llamada",
       "hero.eyebrow": "Estrategia UX · Diseño de producto · IA",
       "hero.title": 'Tu producto no tiene un problema de diseño. Tiene un <em>sistema</em> que te está costando dinero en silencio.',
-      "hero.final": "De lo complejo a lo simple.",
+      "hero.finalA": "De lo <em>complejo</em>",
+      "hero.finalB": "a lo simple.",
       "hero.lead": "Encuentro el punto exacto donde la complejidad de tu producto te está costando adopción, ventas o velocidad de equipo.",
       "hero.ctaPrimary": "Agendar una llamada",
       "hero.ctaSecondary": "Ver casos de estudio",
@@ -1601,7 +1604,8 @@ html.lenis, html.lenis body{ height:auto; }
       "nav.cta": "Book a call",
       "hero.eyebrow": "UX Strategy · Product Design · AI",
       "hero.title": 'Your product doesn\'t have a design problem. It has a <em>system</em> quietly costing you money.',
-      "hero.final": "From complex to simple.",
+      "hero.finalA": "From <em>complex</em>",
+      "hero.finalB": "to simple.",
       "hero.lead": "I find the exact point where your product's complexity is costing you adoption, sales, or team speed.",
       "hero.ctaPrimary": "Book a call",
       "hero.ctaSecondary": "See case studies",
@@ -2676,6 +2680,9 @@ void main(){
     const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
     const L = { haze:$('dvHaze'), city:$('dvCity'), ground:$('dvGround'), left:$('dvNearLeft'), right:$('dvNearRight'), arch:$('dvArch'), cave:$('dvCave'), inside:$('dvInterior') };
     const copyA = $('dvCopyA'), copyB = $('dvCopyB'), cue = $('dvCue');
+    const finA = $('dvFinalA'), finB = $('dvFinalB'), clarityImg = L.inside.querySelector('img');
+    // Posición del cubo dentro de la ilustración final (proporción de su alto)
+    const CUBE_TOP = .53, CUBE_BASE = .71;
     let current = 0, target = 0, raf = 0, lastTime = 0, viewH = 1, frameH = 1, range = 1, top = 0;
     let audio = null, audible = false, busy = false;
 
@@ -2722,9 +2729,19 @@ void main(){
       copyA.style.transform = `translate3d(0,${(-40 * (1 - a)).toFixed(1)}px,0)`;
       copyA.style.pointerEvents = a < .5 ? 'none' : '';
       copyA.style.visibility = a <= 0 ? 'hidden' : '';
-      copyB.style.opacity = b.toFixed(3);
-      copyB.style.transform = `translate3d(0,${(24 * (1 - b)).toFixed(1)}px,0) scale(${(.96 + .04 * b).toFixed(3)})`;
-      copyB.setAttribute('aria-hidden', b < .5 ? 'true' : 'false');
+      // "De lo complejo" arriba del cubo y "a lo simple" debajo; la segunda fila llega un poco después
+      const ba = clamp((u - .70) / .14), bb = clamp((u - .80) / .14);
+      if (ba > 0) {
+        const r = clarityImg.getBoundingClientRect(), vh = stage.clientHeight;
+        const gap = Math.max(14, vh * .025);
+        finA.style.bottom = (vh - (r.top + r.height * CUBE_TOP) + gap).toFixed(1) + 'px';
+        finB.style.top = (r.top + r.height * CUBE_BASE + gap * .6).toFixed(1) + 'px';
+      }
+      finA.style.opacity = ba.toFixed(3);
+      finA.style.transform = `translate3d(0,${(-18 * (1 - ba)).toFixed(1)}px,0)`;
+      finB.style.opacity = bb.toFixed(3);
+      finB.style.transform = `translate3d(0,${(18 * (1 - bb)).toFixed(1)}px,0)`;
+      copyB.setAttribute('aria-hidden', bb < .5 ? 'true' : 'false');
       cue.style.opacity = String(.65 * (1 - clamp(p / .18)));
       if (audio && audible) {
         const t = audio.ctx.currentTime;
