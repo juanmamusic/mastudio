@@ -822,6 +822,7 @@ html.lenis, html.lenis body{ height:auto; }
 .dv-city{ -webkit-mask-image:linear-gradient(#000 85%, transparent); mask-image:linear-gradient(#000 85%, transparent); }
 .dv-ground{ -webkit-mask-image:linear-gradient(transparent 66%, #000 74%, #000 89%, transparent 100%); mask-image:linear-gradient(transparent 66%, #000 74%, #000 89%, transparent 100%); }
 .dv-left{ clip-path:inset(0 50% 0 0); } .dv-right{ clip-path:inset(0 0 0 50%); }
+.dv-fx{ will-change:transform; }
 .dv-cave{ visibility:hidden; will-change:mask-image; } .dv-cave-in{ transform-origin:50% 50%; will-change:transform; }
 .dv-arch{ transform-origin:50% 100%; transform:translate3d(0,100%,0); }
 .dv-grade, .dv-scrim, .dv-vignette{ position:absolute; inset:0; pointer-events:none; }
@@ -1003,9 +1004,12 @@ strong.hl{ font-weight:600; }
       <div class="dv-frame" id="dvFrame">
         <img class="dv-layer dv-haze" id="dvHaze" src="assets/hero/city.webp" alt="" decoding="async" fetchpriority="high">
         <img class="dv-layer dv-city" id="dvCity" src="assets/hero/city.webp" alt="" decoding="async">
+        <canvas class="dv-layer dv-city dv-fx" id="dvCityFx" width="1376" height="768"></canvas>
         <img class="dv-layer dv-ground" id="dvGround" src="assets/hero/city.webp" alt="" decoding="async">
         <img class="dv-layer dv-left" id="dvNearLeft" src="assets/hero/foreground.webp" alt="" decoding="async">
         <img class="dv-layer dv-right" id="dvNearRight" src="assets/hero/foreground.webp" alt="" decoding="async">
+        <canvas class="dv-layer dv-left dv-fx" id="dvFxLeft" width="1376" height="768"></canvas>
+        <canvas class="dv-layer dv-right dv-fx" id="dvFxRight" width="1376" height="768"></canvas>
         <div class="dv-cave" id="dvCave"><div class="dv-cave-in" id="dvInterior"><img class="dv-layer" src="assets/hero/clarity.webp" alt="" decoding="async" loading="lazy"></div></div>
         <img class="dv-layer dv-arch" id="dvArch" src="assets/hero/portal.webp" alt="" decoding="async">
       </div>
@@ -2421,6 +2425,7 @@ void main(){
     const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
     const L = { haze:$('dvHaze'), city:$('dvCity'), ground:$('dvGround'), left:$('dvNearLeft'), right:$('dvNearRight'), arch:$('dvArch'), cave:$('dvCave'), inside:$('dvInterior') };
     const copyA = $('dvCopyA'), copyB = $('dvCopyB'), cue = $('dvCue');
+    const FX = { on: false, u: 0, city: $('dvCityFx'), l: $('dvFxLeft'), r: $('dvFxRight') };
     const finA = $('dvFinalA'), finB = $('dvFinalB'), clarityImg = L.inside.querySelector('img');
     // Posición del cubo dentro de la ilustración final (proporción de su alto)
     const CUBE_TOP = .53, CUBE_BASE = .71;
@@ -2445,12 +2450,18 @@ void main(){
       pos(L.ground, pan, K(u, 0, -.19, -.71));
       const ny = K(u, 0, -.30, -1.12), nx = K(u, 0, .035, .09);
       pos(L.left, -nx, ny); pos(L.right, nx, ny);
+      if (FX.on) { FX.city.style.transform = L.city.style.transform; FX.l.style.transform = L.left.style.transform; FX.r.style.transform = L.right.style.transform; }
       const bottomFade = 34 * Math.min(1, -ny * 6);
       const vertical = `linear-gradient(to bottom,#000 ${100 - bottomFade}%,transparent 100%)`;
       [[L.left, 'linear-gradient(to right,#000 38%,transparent 50%)'], [L.right, 'linear-gradient(to left,#000 38%,transparent 50%)']].forEach(([el, hz]) => {
         el.style.maskImage = hz + ',' + vertical; el.style.webkitMaskImage = hz + ',' + vertical;
         el.style.maskComposite = 'intersect'; el.style.webkitMaskComposite = 'source-in';
       });
+      if (FX.on) [[L.left, FX.l], [L.right, FX.r]].forEach(([a, b]) => {
+        b.style.maskImage = a.style.maskImage; b.style.webkitMaskImage = a.style.webkitMaskImage;
+        b.style.maskComposite = a.style.maskComposite; b.style.webkitMaskComposite = a.style.webkitMaskComposite;
+      });
+      FX.u = u;
       const ay = K(u, 1, .16, -.07), as = K(u, 1, 1, 1.75);
       pos(L.arch, 0, ay, as);
       const fade = 26 * clamp((u - .42) / .58 / .35);
@@ -2517,6 +2528,85 @@ void main(){
       if (audio) document.hidden ? audio.ctx.suspend() : (audible && audio.ctx.resume()); if (!document.hidden) { sample(); schedule(); } });
     resize();
     window.addEventListener('load', resize, { once: true });
+
+
+    // =====================================================
+    // Luces vivas: pantallas, ventanas y naves de la propia ilustración
+    // se encienden, bajan y parpadean. Regiones detectadas en la imagen.
+    // s = pantalla grande, w = ventana/pantalla chica, n = luz de nave, f = indicador del primer plano
+    // =====================================================
+    (function(){
+      if (REDUCED_MOTION || !FX.city) return;
+      const CITY = [[1288,6,26,42,"w"],[1163,19,15,15,"w"],[306,22,43,156,"s"],[135,36,135,83,"s"],[307,38,15,17,"w"],[1360,53,15,15,"w"],[1325,54,23,27,"w"],[1336,67,19,19,"w"],[232,77,37,26,"w"],[355,88,38,97,"w"],[219,91,21,16,"w"],[1309,91,17,21,"w"],[994,93,23,26,"n"],[225,101,63,55,"s"],[981,101,20,26,"n"],[218,107,22,26,"w"],[18,109,19,17,"w"],[197,110,23,26,"w"],[1284,111,18,21,"w"],[29,115,17,18,"w"],[383,121,33,89,"w"],[1232,130,131,196,"s"],[196,135,24,25,"w"],[215,137,17,16,"w"],[879,139,20,23,"n"],[893,140,17,17,"n"],[17,149,20,24,"w"],[137,150,17,16,"w"],[159,153,25,44,"w"],[38,165,37,30,"w"],[942,184,15,15,"n"],[333,187,15,15,"w"],[280,193,79,106,"s"],[22,194,17,17,"w"],[369,195,16,19,"w"],[40,203,24,24,"w"],[1145,205,17,17,"w"],[5,207,21,20,"w"],[363,211,47,24,"w"],[1100,211,19,28,"w"],[21,216,24,22,"w"],[196,223,60,110,"s"],[1035,226,108,177,"s"],[110,228,15,15,"w"],[278,263,82,127,"s"],[-2,273,139,207,"s"],[147,275,38,109,"s"],[67,278,15,15,"w"],[133,278,16,15,"w"],[1055,278,16,16,"w"],[1035,289,18,20,"w"],[1349,289,21,39,"w"],[148,290,16,46,"w"],[353,293,62,139,"s"],[1329,314,21,19,"w"],[913,328,95,149,"s"],[1313,334,36,33,"w"],[913,336,18,16,"w"],[293,344,35,34,"w"],[876,347,31,41,"w"],[34,348,29,32,"w"],[487,353,21,30,"w"],[615,357,27,25,"w"],[153,359,89,99,"s"],[1025,360,20,17,"w"],[64,364,20,41,"w"],[169,364,16,17,"w"],[313,365,21,18,"w"],[547,368,30,23,"w"],[329,370,15,15,"w"],[496,379,17,21,"w"],[575,382,65,51,"s"],[1098,383,16,16,"w"],[348,389,17,22,"w"],[452,390,16,16,"w"],[852,390,19,20,"w"],[1020,392,36,25,"w"],[534,396,22,22,"w"],[652,396,29,23,"w"],[828,396,31,31,"w"],[555,402,32,23,"w"],[860,404,29,21,"w"],[338,405,15,15,"w"],[887,409,34,23,"w"],[393,413,22,23,"w"],[361,419,31,46,"w"],[634,420,26,44,"w"],[472,422,46,63,"w"],[563,422,35,40,"w"],[850,425,31,36,"w"],[869,436,59,78,"s"],[599,437,36,44,"w"],[255,440,23,17,"w"],[515,441,20,18,"w"],[818,447,54,93,"s"],[690,450,40,37,"w"],[291,452,137,82,"s"],[535,453,15,20,"w"],[686,461,72,87,"s"],[64,462,32,30,"w"],[556,463,27,27,"w"],[371,466,16,15,"w"],[100,469,22,32,"w"],[580,471,19,33,"w"],[598,474,82,38,"s"],[497,478,28,24,"w"],[224,483,27,58,"w"],[545,483,15,19,"w"],[787,491,52,60,"w"],[1354,497,24,28,"w"],[535,498,15,15,"w"],[506,500,21,27,"w"],[899,507,16,16,"w"],[574,511,26,33,"w"],[871,511,16,15,"w"],[669,513,16,21,"w"],[883,514,24,36,"w"],[646,515,23,29,"w"],[686,517,19,20,"w"],[604,521,17,19,"w"],[482,522,22,32,"w"],[623,527,18,29,"w"],[672,529,17,22,"w"],[840,535,16,20,"w"],[299,538,142,52,"s"],[692,541,15,15,"w"],[747,542,26,28,"w"],[47,544,67,33,"w"],[769,549,28,47,"w"],[888,551,41,22,"w"],[591,552,19,17,"w"],[966,557,15,15,"w"],[814,560,22,15,"w"],[682,562,59,23,"w"],[642,563,37,29,"w"],[800,563,63,57,"s"],[1118,568,15,15,"w"],[148,569,45,18,"w"],[959,573,36,66,"w"],[992,573,32,64,"w"],[1050,577,22,18,"w"],[748,579,18,27,"w"],[1069,579,20,22,"w"],[238,582,25,16,"w"],[704,585,46,118,"s"],[548,587,37,29,"w"],[1160,587,128,111,"s"],[681,595,48,46,"w"],[399,596,22,21,"w"],[587,598,28,28,"w"],[766,598,26,21,"w"],[627,599,15,15,"w"],[838,602,19,17,"w"],[145,603,48,41,"w"],[1288,607,90,121,"s"],[791,613,35,22,"w"],[414,615,20,25,"w"],[24,616,84,52,"w"],[642,620,19,21,"w"],[744,621,44,23,"w"],[523,644,18,20,"w"],[737,646,67,47,"w"],[804,648,54,35,"w"],[351,653,23,17,"w"],[467,656,15,15,"w"],[338,659,15,15,"w"],[454,660,18,16,"w"],[413,661,22,29,"w"],[1008,674,15,16,"w"],[1019,682,15,15,"w"],[1188,683,41,35,"w"],[720,690,34,77,"w"],[759,695,39,52,"w"],[809,695,70,44,"w"],[1251,704,53,53,"w"],[1261,725,27,27,"w"],[134,728,60,38,"w"],[791,740,53,26,"w"],[1186,745,28,24,"w"],[764,753,16,17,"w"],[857,755,15,15,"w"]], FG = [[1119,9,45,22,"f"],[1276,32,28,23,"f"],[1262,53,13,15,"f"],[1265,156,11,11,"f"],[100,172,17,22,"f"],[95,208,16,16,"f"],[86,221,11,12,"f"],[220,227,12,13,"f"],[219,252,12,16,"f"],[1310,300,30,13,"f"],[1196,336,13,13,"f"],[1192,342,11,11,"f"],[1276,343,12,45,"f"],[1315,371,12,27,"f"],[1163,374,15,14,"f"],[1058,396,12,12,"f"],[216,403,16,15,"f"],[227,415,11,11,"f"],[404,423,36,24,"f"],[1132,427,12,12,"f"],[377,428,11,11,"f"],[1253,438,16,20,"f"],[515,442,20,12,"f"],[1281,443,18,12,"f"],[532,444,11,11,"f"],[429,445,21,18,"f"],[471,446,31,27,"f"],[462,452,11,11,"f"],[553,452,16,15,"f"],[584,454,11,12,"f"],[1251,455,12,28,"f"],[1045,456,19,31,"f"],[535,464,21,12,"f"],[498,468,11,11,"f"],[429,472,18,12,"f"],[444,472,13,11,"f"],[1250,479,11,12,"f"],[102,493,30,18,"f"],[1249,494,11,12,"f"],[1280,579,25,19,"f"],[603,594,21,13,"f"],[612,594,82,24,"f"],[840,594,16,11,"f"],[853,594,35,13,"f"],[511,595,11,11,"f"],[803,596,15,13,"f"],[811,604,17,13,"f"],[1237,606,21,17,"f"],[1188,613,28,21,"f"],[1111,646,24,17,"f"],[645,656,22,12,"f"],[745,656,12,11,"f"],[256,674,13,17,"f"],[653,677,34,12,"f"],[735,677,13,12,"f"],[1048,681,16,15,"f"],[1326,690,14,14,"f"],[1040,691,11,11,"f"],[101,694,12,27,"f"],[1276,695,55,36,"f"],[1017,697,13,12,"f"],[1094,700,17,16,"f"],[427,710,36,12,"f"],[1035,730,20,17,"f"],[493,751,98,13,"f"]];
+      const rnd = (a, b) => a + Math.random() * (b - a);
+      const mk = r => ({ x: r[0], y: r[1], w: r[2], h: r[3], t: r[4], ph: rnd(0, 6.28), sp: rnd(.6, 1.4),
+        twinkle: r[4] === 'w' ? Math.random() < .45 : r[4] === 'f' ? Math.random() < .35 : false,
+        on: Math.random() < .7, next: rnd(1, 8), g0: rnd(3, 12), g1: 0, period: rnd(1.7, 2.6), lvl: rnd(.1, .35) });
+      const cityR = CITY.map(mk), fgR = FG.map(mk);
+      const ctxC = FX.city.getContext('2d'), ctxL = FX.l.getContext('2d'), ctxR = FX.r.getContext('2d');
+      let imgC, imgF, darkC, darkF, ready = 0, last = 0, lastDraw = 0;
+      // silueta oscura de las luces (para "apagarlas")
+      function silhouette(img){
+        const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
+        const x = c.getContext('2d'); x.drawImage(img, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = '#03050c'; x.fillRect(0, 0, c.width, c.height);
+        return c;
+      }
+      function load(src, cb){ const i = new Image(); i.decoding = 'async'; i.onload = () => cb(i); i.src = src; }
+      function start(){
+        load('assets/hero/city-lights.webp', i => { imgC = i; darkC = silhouette(i); if (++ready === 2) go(); });
+        load('assets/hero/foreground-lights.webp', i => { imgF = i; darkF = silhouette(i); if (++ready === 2) go(); });
+      }
+      // nivel de cada luz: >0 la enciende (más brillo), <0 la apaga
+      function level(r, t, dt){
+        if (r.t === 'n') {                                   // destello doble de navegación
+          const p = ((t + r.ph) % r.period) / r.period;
+          return (p < .05 || (p > .11 && p < .16)) ? 1 : -.15;
+        }
+        if (r.twinkle) {                                     // se apaga y se enciende cada tanto
+          r.next -= dt; if (r.next <= 0) { r.on = !r.on; r.next = r.on ? rnd(3, 9) : rnd(.8, 3.5); }
+          r.cur = (r.cur ?? (r.on ? 1 : 0)) + ((r.on ? 1 : 0) - (r.cur ?? 0)) * Math.min(1, dt * 9);
+          return r.cur * (r.lvl + .12 * Math.sin(t * 3 * r.sp + r.ph)) - (1 - r.cur) * .7;
+        }
+        let v = (r.t === 's' ? .14 : .08) + (r.t === 's' ? .1 : .06) * Math.sin(t * 1.3 * r.sp + r.ph);
+        if (r.t === 's') {                                   // falla eléctrica ocasional en pantallas
+          r.g0 -= dt;
+          if (r.g0 <= 0) { r.g1 = rnd(.25, .55); r.g0 = rnd(6, 16); }
+          if (r.g1 > 0) { r.g1 -= dt; v = (Math.floor(t * 14 + r.ph) % 2) ? .6 : -.65; }
+        }
+        if (r.t === 'f' && !r.twinkle) v = .18 + .18 * Math.sin(t * 1.6 * r.sp + r.ph);
+        return v;
+      }
+      function paint(ctx, regs, img, dark, t, dt){
+        ctx.clearRect(0, 0, 1376, 768);
+        for (const r of regs) {
+          const v = level(r, t, dt);
+          if (v > 0) { ctx.globalAlpha = Math.min(1, v); ctx.drawImage(img, r.x, r.y, r.w, r.h, r.x, r.y, r.w, r.h); }
+          else if (v < 0) { ctx.globalAlpha = Math.min(1, -v); ctx.drawImage(dark, r.x, r.y, r.w, r.h, r.x, r.y, r.w, r.h); }
+          if (r.t === 'n' && v > .5) {                       // halo de la luz de la nave
+            const cx = r.x + r.w / 2, cy = r.y + r.h / 2, g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 9);
+            g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(.35, 'rgba(160,190,255,.5)'); g.addColorStop(1, 'rgba(120,150,255,0)');
+            ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.fillRect(cx - 9, cy - 9, 18, 18);
+          }
+        }
+        ctx.globalAlpha = 1;
+      }
+      const gate = onScreen(stage);
+      function go(){
+        FX.on = true; render(current);
+        (function loop(now){
+          requestAnimationFrame(loop);
+          if (!gate.on || document.hidden || FX.u > .55) { last = 0; return; }   // ya no se ve la ciudad
+          if (now - lastDraw < 33) return;                                         // ~30 cuadros por segundo bastan
+          lastDraw = now;
+          const t = now / 1000, dt = last ? Math.min(.1, t - last) : .033; last = t;
+          paint(ctxC, cityR, imgC, darkC, t, dt);
+          paint(ctxL, fgR, imgF, darkF, t, dt);
+          ctxR.clearRect(0, 0, 1376, 768); ctxR.drawImage(FX.l, 0, 0);
+        })(performance.now());
+      }
+      // se carga después de la página para no competir con lo importante
+      if (document.readyState === 'complete') setTimeout(start, 300); else window.addEventListener('load', () => setTimeout(start, 300), { once: true });
+    })();
 
     // Ambiente sonoro opcional: se genera en el navegador, solo tras un clic
     const btn = $('dvSound');
